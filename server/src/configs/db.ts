@@ -1,15 +1,27 @@
 import mongoose from 'mongoose';
 
+type NodeEnvironment = 'development' | 'production';
+
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGO_URI;
+    // add configuration with a two values
+    const config = {
+      development: {
+        mongoURI: process.env.MONGO_URI_DEV as string,
+      },
+      production: {
+        mongoURI: process.env.MONGO_URI_PROD as string,
+      },
+    };
 
-    if (!mongoURI) {
-      console.error('MONGO_URI environment variable is not defined.');
-      process.exit(1);
-    }
+    // select based on the current environment
+    const nodeEnv = process.env.NODE_ENV as NodeEnvironment;
 
-    const conn = await mongoose.connect(mongoURI as string);
+    const uri = config[nodeEnv].mongoURI;
+
+    // connect to the database
+    const conn = await mongoose.connect(uri);
+
     console.log(`MongoDB is connected: ${conn.connection.host}`);
   } catch (err) {
     console.error(err);
