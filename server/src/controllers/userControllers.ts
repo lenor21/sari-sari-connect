@@ -91,13 +91,74 @@ const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
   if (req.user) {
     const user = await User.findById(req.user._id);
 
-    if (user) {
-      res.status(200).json(user);
-    } else {
+    if (!user) {
       res.status(404);
       throw new Error('User not found');
     }
+
+    res.status(200).json(user);
   }
 });
 
-export { getUsers, addUser, signInUser, signOutUser, getUserProfile };
+// @desc: update user profile
+// @route: PUT /api/users/profile
+// @access: Private
+const updateUserProfile = asyncHandler(async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    res.status(400);
+    throw new Error('Cannot update empty field');
+  }
+
+  if (req.user) {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    // check if the email already used
+    const emailUsed = await User.findOne({ email });
+
+    if (emailUsed) {
+      res.status(400);
+      throw new Error('Email already used');
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
+      new: true,
+    });
+
+    res.status(200).json(updatedUser);
+  }
+});
+
+// @desc: delete user
+// @route: DELETE /api/users/delete
+// @access: Private
+const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+  if (req.user) {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({ deleted: user });
+  }
+});
+
+export {
+  getUsers,
+  addUser,
+  signInUser,
+  signOutUser,
+  getUserProfile,
+  updateUserProfile,
+  deleteUser,
+};
