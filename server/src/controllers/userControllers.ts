@@ -52,8 +52,52 @@ const addUser = asyncHandler(async (req: Request, res: Response) => {
 // @desc: Sign in user
 // @route: POST /api/users/sign-in
 // @access: Public
-const signInUser = async (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Sign in user' });
-};
+const signInUser = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
 
-export { getUsers, addUser, signInUser };
+  if (!email || !password) {
+    res.status(400);
+    throw new Error('Please fill all fields');
+  }
+
+  const user = await User.findOne({ email });
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    generateToken(res, user._id.toString());
+
+    res.status(200).json(user);
+  } else {
+    res.status(400);
+    throw new Error('Invalid credentials');
+  }
+});
+
+// @desc: Sign out user
+// @route: POST /api/users/sign-out
+// @access: Private
+const signOutUser = asyncHandler(async (req: Request, res: Response) => {
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(200).json({ message: 'User logged out' });
+});
+
+// @desc: Get user profile
+// @route: GET /api/users/profile
+// @access: Private
+const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
+  if (req.user) {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404);
+      throw new Error('User not found');
+    }
+  }
+});
+
+export { getUsers, addUser, signInUser, signOutUser, getUserProfile };
