@@ -66,7 +66,7 @@ const SignUp = () => {
         name: values.name,
         email: values.email,
         password: values.password,
-      });
+      }).unwrap();
 
       dispatch(setCredentials({ ...res }));
       navigate('/dashboard');
