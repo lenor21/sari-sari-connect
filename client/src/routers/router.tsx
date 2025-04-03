@@ -7,6 +7,8 @@ import Dashboard from '@/pages/dashboard/Dashboard';
 import Profile from '@/pages/dashboard/Profile';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
+import PrivateRoute from '@/pages/PrivateRoute';
+import AuthRedirect from '@/pages/AuthRedirect';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +17,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: (
+          <AuthRedirect redirectTo='/dashboard'>
+            <Home />
+          </AuthRedirect>
+        ),
       },
       {
         path: '*',
@@ -23,23 +29,37 @@ const router = createBrowserRouter([
       },
       {
         path: '/sign-in',
-        element: <SignIn />,
+        element: (
+          <AuthRedirect redirectTo='/dashboard'>
+            <SignIn />
+          </AuthRedirect>
+        ),
       },
       {
         path: '/sign-up',
-        element: <SignUp />,
+        element: (
+          <AuthRedirect redirectTo='/dashboard'>
+            <SignUp />
+          </AuthRedirect>
+        ),
       },
       {
-        path: '/dashboard',
-        element: <Dashboard />,
+        path: '',
+        element: <PrivateRoute />,
         children: [
           {
             path: '/dashboard',
-            element: <Index />,
-          },
-          {
-            path: '/dashboard/profile',
-            element: <Profile />,
+            element: <Dashboard />,
+            children: [
+              {
+                path: '/dashboard',
+                element: <Index />,
+              },
+              {
+                path: '/dashboard/profile',
+                element: <Profile />,
+              },
+            ],
           },
         ],
       },
