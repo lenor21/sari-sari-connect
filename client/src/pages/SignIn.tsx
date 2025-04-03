@@ -61,7 +61,6 @@ const SignIn = () => {
     } catch (err) {
       console.error(err);
     }
-    console.log(values);
   }
 
   return (

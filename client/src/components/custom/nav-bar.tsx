@@ -40,7 +40,11 @@ const NavBar = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to='/dashboard/profile' className='w-full'>
+                  Profile
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <LogOutButton />
               </DropdownMenuItem>

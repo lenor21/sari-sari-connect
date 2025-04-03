@@ -20,8 +20,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
-import { Mail } from 'lucide-react';
-import { Link } from 'react-router';
+import { Mail, Loader2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { useRegisterMutation } from '@/features/auth/usersApiSlice';
+import { setCredentials } from '@/features/auth/authSlice';
 
 const formSchema = z
   .object({
@@ -41,6 +44,11 @@ const formSchema = z
   });
 
 const SignUp = () => {
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,10 +59,19 @@ const SignUp = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await register({
+        name: values.username,
+        email: values.email,
+        password: values.password,
+      });
+
+      dispatch(setCredentials({ ...res }));
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -122,7 +139,11 @@ const SignUp = () => {
                   </FormItem>
                 )}
               />
-              <Button className='w-full mb-0' type='submit'>
+              <Button
+                className='w-full mb-0'
+                type='submit'
+                disabled={isLoading}>
+                {isLoading && <Loader2 className='animate-spin' />}
                 Sign Up
               </Button>
 
