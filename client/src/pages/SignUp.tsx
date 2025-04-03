@@ -25,11 +25,12 @@ import { Link, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '@/features/auth/usersApiSlice';
 import { setCredentials } from '@/features/auth/authSlice';
+import Swal from 'sweetalert2';
 
 const formSchema = z
   .object({
-    username: z.string().min(2, {
-      message: 'Username must be at least 2 characters.',
+    name: z.string().min(2, {
+      message: 'Name must be at least 2 characters.',
     }),
     email: z.string().email().min(5),
     password: z
@@ -52,7 +53,7 @@ const SignUp = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: '',
       confirm: '',
@@ -62,7 +63,7 @@ const SignUp = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const res = await register({
-        name: values.username,
+        name: values.name,
         email: values.email,
         password: values.password,
       });
@@ -70,7 +71,13 @@ const SignUp = () => {
       dispatch(setCredentials({ ...res }));
       navigate('/dashboard');
     } catch (err) {
-      console.error(err);
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: `${err}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   }
 
@@ -86,12 +93,12 @@ const SignUp = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
               <FormField
                 control={form.control}
-                name='username'
+                name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter your username' {...field} />
+                      <Input placeholder='Enter your name' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

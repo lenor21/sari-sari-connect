@@ -72,6 +72,13 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.dark #content {
+  max-height: calc(100svh - 120px);
+  overflow-y: scroll;
+  border: 1px solid #737373;
+  background: color-mix(in oklab, #737373 50%, transparent);
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -117,4 +124,15 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+#main {
+  height: calc(100svh - 56px);
+}
+
+#content {
+  height: calc(100svh - 120px);
+  overflow-y: scroll;
+  border: 1px solid #eee;
+  background: #eee;
 }

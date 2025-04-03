@@ -104,34 +104,28 @@ const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
 // @route: PUT /api/users/profile
 // @access: Private
 const updateUserProfile = asyncHandler(async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
-    res.status(400);
-    throw new Error('Cannot update empty field');
-  }
-
   if (req.user) {
     const user = await User.findById(req.user._id);
 
-    if (!user) {
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+
+      if (req.body.password) {
+        // hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+        user.password = hashedPassword;
+      }
+
+      const updatedUser = await user.save();
+
+      res.json(updatedUser);
+    } else {
       res.status(404);
       throw new Error('User not found');
     }
-
-    // check if the email already used
-    const emailUsed = await User.findOne({ email });
-
-    if (emailUsed) {
-      res.status(400);
-      throw new Error('Email already used');
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
-      new: true,
-    });
-
-    res.status(200).json(updatedUser);
   }
 });
 

@@ -10,7 +10,7 @@ export default function Layout() {
     <div>
       <SidebarProvider>
         <AppSidebar />
-        <main className='w-full h-full p-3'>
+        <main id='main' className='w-full h-full p-3 overflow-hidden'>
           <header>
             <div className='flex items-center gap-x-2 lg:gap-x-4 h-5'>
               <SidebarTrigger />
@@ -19,10 +19,8 @@ export default function Layout() {
             </div>
           </header>
 
-          <ScrollArea className='h-[calc(100svh - 56px)] w-full my-6 bg-[#eee] p-6'>
-            <div className='min-h-screen'>
-              <Outlet />
-            </div>
+          <ScrollArea id='content' className='w-full my-4 p-3 lg:p-4'>
+            <Outlet />
           </ScrollArea>
         </main>
       </SidebarProvider>
