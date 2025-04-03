@@ -1,37 +1,21 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useLoginMutation } from '@/features/auth/usersApiSlice';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/features/auth/authSlice';
+import Swal from 'sweetalert2';
 
 const formSchema = z.object({
   email: z.string().email().min(5),
-  password: z
-    .string()
-    .min(6, { message: 'Must be 6 or more characters long' })
-    .max(20, { message: 'Must be 20 or fewer characters long' }),
+  password: z.string().min(6, { message: 'Must be 6 or more characters long' }).max(20, { message: 'Must be 20 or fewer characters long' }),
 });
 
 const SignIn = () => {
@@ -58,8 +42,14 @@ const SignIn = () => {
       dispatch(setCredentials({ ...res }));
 
       navigate('/dashboard');
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: `${err.data.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   }
 
@@ -68,13 +58,14 @@ const SignIn = () => {
       <Card className='w-[350px]'>
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
-          <CardDescription>
-            Enter to have an access to your account
-          </CardDescription>
+          <CardDescription>Enter to have an access to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='space-y-8'
+            >
               <FormField
                 control={form.control}
                 name='email'
@@ -82,7 +73,10 @@ const SignIn = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter your email' {...field} />
+                      <Input
+                        placeholder='Enter your email'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -95,7 +89,10 @@ const SignIn = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter your password' {...field} />
+                      <Input
+                        placeholder='Enter your password'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,7 +101,8 @@ const SignIn = () => {
               <Button
                 className='w-full mb-0'
                 type='submit'
-                disabled={isLoading}>
+                disabled={isLoading}
+              >
                 {isLoading && <Loader2 className='animate-spin' />}
                 Sign In
               </Button>
@@ -113,7 +111,10 @@ const SignIn = () => {
             </form>
           </Form>
 
-          <Button className='w-full mb-0' variant='outline'>
+          <Button
+            className='w-full mb-0'
+            variant='outline'
+          >
             <Mail /> Sign in with Gmail
           </Button>
         </CardContent>
@@ -121,7 +122,10 @@ const SignIn = () => {
         <CardFooter className='flex justify-between'>
           <p className='text-sm'>
             Don't have an account?{' '}
-            <Link to='/sign-up' className='underline hover:no-underline'>
+            <Link
+              to='/sign-up'
+              className='underline hover:no-underline'
+            >
               Sign up
             </Link>
           </p>
