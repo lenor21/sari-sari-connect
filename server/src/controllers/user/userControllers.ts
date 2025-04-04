@@ -16,7 +16,7 @@ const getUsers = asyncHandler(async (req: Request, res: Response) => {
 // @route: POST /api/users
 // @access: Public
 const addUser = asyncHandler(async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // check if the inputs are empty
   if (!name || !email || !password) {
@@ -37,7 +37,12 @@ const addUser = asyncHandler(async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   // create a new user
-  const user = await User.create({ name, email, password: hashedPassword });
+  const user = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    role,
+  });
 
   if (user) {
     generateToken(res, user._id.toString());

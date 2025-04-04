@@ -25,8 +25,8 @@ const Home = () => {
             <Button size={'lg'}>
               <Link to='/sign-in'>Get Started</Link>
             </Button>
-            <Button size={'lg'} variant={'outline'} disabled>
-              Learn more
+            <Button size={'lg'} variant={'outline'}>
+              <Link to='/store-register'>Register Store</Link>
             </Button>
           </div>
           {/* End Buttons */}

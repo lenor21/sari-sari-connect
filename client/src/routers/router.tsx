@@ -10,6 +10,7 @@ import SignUp from '@/pages/SignUp';
 import PrivateRoute from '@/pages/PrivateRoute';
 import AuthRedirect from '@/pages/AuthRedirect';
 import Products from '@/pages/dashboard/Products';
+import StoreRegister from '@/pages/StoreRegister';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
         element: (
           <AuthRedirect redirectTo='/dashboard'>
             <SignUp />
+          </AuthRedirect>
+        ),
+      },
+      {
+        path: '/store-register',
+        element: (
+          <AuthRedirect redirectTo='/dashboard'>
+            <StoreRegister />
           </AuthRedirect>
         ),
       },
