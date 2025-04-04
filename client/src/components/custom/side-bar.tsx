@@ -14,12 +14,12 @@ import { NavLink } from 'react-router';
 // Menu items.
 const items = [
   {
-    title: 'Home',
+    title: 'Stores',
     url: '/dashboard',
   },
   {
-    title: 'Profile',
-    url: '/dashboard/profile',
+    title: 'Products',
+    url: '/dashboard/products',
   },
 ];
 

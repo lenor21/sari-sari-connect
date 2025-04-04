@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import User from '../models/userModel';
+import User from '../../models/user/userModel';
 import bcrypt from 'bcryptjs';
-import generateToken from '../utils/generateToken';
+import generateToken from '../../utils/generateToken';
 
 // @desc: Get all the users
 // @route: GET /api/users

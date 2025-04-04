@@ -70,11 +70,12 @@ const SignUp = () => {
 
       dispatch(setCredentials({ ...res }));
       navigate('/dashboard');
-    } catch (err) {
+    } catch (err: any) {
       Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: `${err}`,
+        color: '#0a0a0a',
+        position: 'center',
+        icon: 'error',
+        title: `${err.data.message}`,
         showConfirmButton: false,
         timer: 1500,
       });

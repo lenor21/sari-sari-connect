@@ -2,13 +2,14 @@ import { createBrowserRouter } from 'react-router';
 import App from '@/App';
 import Home from '@/pages/Home';
 import NotFound from '@/pages/NotFound';
-import Index from '@/pages/dashboard/Index';
+import Stores from '@/pages/dashboard/Stores';
 import Dashboard from '@/pages/dashboard/Dashboard';
 import Profile from '@/pages/dashboard/Profile';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
 import PrivateRoute from '@/pages/PrivateRoute';
 import AuthRedirect from '@/pages/AuthRedirect';
+import Products from '@/pages/dashboard/Products';
 
 const router = createBrowserRouter([
   {
@@ -17,11 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: (
-          <AuthRedirect redirectTo='/dashboard'>
-            <Home />
-          </AuthRedirect>
-        ),
+        element: <Home />,
       },
       {
         path: '*',
@@ -53,11 +50,15 @@ const router = createBrowserRouter([
             children: [
               {
                 path: '/dashboard',
-                element: <Index />,
+                element: <Stores />,
               },
               {
                 path: '/dashboard/profile',
                 element: <Profile />,
+              },
+              {
+                path: '/dashboard/products',
+                element: <Products />,
               },
             ],
           },

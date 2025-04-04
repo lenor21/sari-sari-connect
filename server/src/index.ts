@@ -1,10 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import userRoute from './routes/userRoutes';
+import userRoute from './routes/user/userRoutes';
 import connectDB from './configs/db';
 import errorHandler from './middlewares/errorMiddleware';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import productRoute from './routes/product/productRoute';
+import catgeoryProductRoute from './routes/product/categoryProductRoute';
 
 dotenv.config();
 connectDB();
@@ -19,6 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 app.use('/api/users', userRoute);
+app.use('/api/products', productRoute);
+app.use('/api/category-products', catgeoryProductRoute);
 app.use(errorHandler);
 
 app.listen(port, () => {

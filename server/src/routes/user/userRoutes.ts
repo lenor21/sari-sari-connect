@@ -7,8 +7,8 @@ import {
   signInUser,
   signOutUser,
   updateUserProfile,
-} from '../controllers/userControllers';
-import { protect } from '../middlewares/authMiddleware';
+} from '../../controllers/user/userControllers';
+import { protect } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
