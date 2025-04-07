@@ -15,29 +15,34 @@ const getProducts = asyncHandler(async (req: Request, res: Response) => {
 // @route: GET /api/products
 // @access: Private
 const addProduct = asyncHandler(async (req: Request, res: Response) => {
-  const { name, description, price, category, imgURL } = req.body;
+  const { name, description, price, quantity, category, imgURL } = req.body;
 
-  if (!name || !description || !price || !category) {
+  if (!name || !description || !price || !category || !quantity) {
     res.status(400);
     throw new Error('Please fill all fields');
   }
 
-  // check if category exist
-  const productExists = await Product.findOne({ name });
+  if (req.user) {
+    // check if category exist
+    const productExists = await Product.findOne({ name, user: req.user._id });
 
-  if (productExists) {
-    res.status(400);
-    throw new Error('Product already exists');
+    if (productExists) {
+      res.status(400);
+      throw new Error('Product already exists');
+    }
   }
 
   // check if category exists
-  const categoryExists = await CategoryProduct.findOne({ name: category });
+  const categoryExists = await CategoryProduct.findOne({
+    name: category,
+  });
 
   if (categoryExists) {
     const product = await Product.create({
       name,
       description,
       price,
+      quantity,
       imgURL,
       category: categoryExists._id,
       user: req.user?._id,

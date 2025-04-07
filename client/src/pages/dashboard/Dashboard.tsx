@@ -3,7 +3,6 @@ import { AppSidebar } from '@/components/custom/side-bar';
 import { Outlet } from 'react-router';
 import BreadCrumb from '@/components/custom/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Layout() {
   return (
@@ -19,9 +18,9 @@ export default function Layout() {
             </div>
           </header>
 
-          <ScrollArea id='content' className='w-full my-4 p-3 lg:p-4'>
+          <div id='content' className='w-full my-4 p-3 lg:p-4'>
             <Outlet />
-          </ScrollArea>
+          </div>
         </main>
       </SidebarProvider>
     </div>

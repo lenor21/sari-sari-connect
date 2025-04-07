@@ -1,11 +1,22 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UserPen, Loader2 } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { z } from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -20,7 +31,11 @@ const formSchema = z
       message: 'Name must be at least 2 characters.',
     }),
     email: z.string().email().min(5),
-    password: z.string().min(6, { message: 'Must be 6 or more characters long' }).max(20, { message: 'Must be 20 or fewer characters long' }).optional(),
+    password: z
+      .string()
+      .min(6, { message: 'Must be 6 or more characters long' })
+      .max(20, { message: 'Must be 20 or fewer characters long' })
+      .optional(),
     confirmPassword: z.string().optional(),
   })
   .refine(
@@ -80,14 +95,11 @@ const Profile = () => {
     <div className='grid lg:grid-cols-2 gap-3'>
       <div className='bg-white p-5 lg:py-7 border rounded-lg'>
         <div className='flex flex-col gap-y-3 items-center my-6'>
-          <Avatar className='w-1/2 h-auto'>
+          <Avatar className='w-1/2 lg:w-1/3 h-auto'>
             <AvatarImage src='https://github.com/shadcn.png' />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <Popover
-            open={open}
-            onOpenChange={setOpen}
-          >
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger className='flex gap-x-1 border border-[#e5e5e5] py-1 px-3 rounded-lg text-sm items-center cursor-pointer hover:opacity-70'>
               <UserPen className='w-4' />
               Edit Profile
@@ -97,8 +109,7 @@ const Profile = () => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className='space-y-8'
-                >
+                  className='space-y-8'>
                   <FormField
                     control={form.control}
                     name='name'
@@ -106,10 +117,7 @@ const Profile = () => {
                       <FormItem>
                         <FormLabel>Username</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder='Enter your username'
-                            {...field}
-                          />
+                          <Input placeholder='Enter your username' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -122,10 +130,7 @@ const Profile = () => {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder='Enter your email'
-                            {...field}
-                          />
+                          <Input placeholder='Enter your email' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -138,10 +143,7 @@ const Profile = () => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder='Enter your password'
-                            {...field}
-                          />
+                          <Input placeholder='Enter your password' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -167,8 +169,7 @@ const Profile = () => {
                     className='w-full mb-0'
                     type='submit'
                     disabled={isLoading}
-                    onClick={handleSaveClick}
-                  >
+                    onClick={handleSaveClick}>
                     {isLoading && <Loader2 className='animate-spin' />}
                     Save
                   </Button>

@@ -9,8 +9,10 @@ import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
 import PrivateRoute from '@/pages/PrivateRoute';
 import AuthRedirect from '@/pages/AuthRedirect';
-import Products from '@/pages/dashboard/Products';
+import Products from '@/pages/dashboard/products/Products';
 import StoreRegister from '@/pages/StoreRegister';
+import AddProduct from '@/pages/dashboard/products/AddProduct';
+import Root from '@/pages/dashboard/products/Root';
 
 const router = createBrowserRouter([
   {
@@ -67,7 +69,17 @@ const router = createBrowserRouter([
               },
               {
                 path: '/dashboard/products',
-                element: <Products />,
+                element: <Root />,
+                children: [
+                  {
+                    path: '/dashboard/products',
+                    element: <Products />,
+                  },
+                  {
+                    path: '/dashboard/products/add-product',
+                    element: <AddProduct />,
+                  },
+                ],
               },
             ],
           },
