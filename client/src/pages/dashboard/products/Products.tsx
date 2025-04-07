@@ -78,7 +78,7 @@ const Products = () => {
   }, [categoriesDataRaw]);
 
   return (
-    <div className='bg-white p-4 py-10'>
+    <div id='products' className='bg-white p-4 py-10'>
       <div className='mb-3 flex justify-between flex-col lg:flex-row gap-2'>
         <div className='flex flex-col gap-2 lg:flex-row'>
           <Input

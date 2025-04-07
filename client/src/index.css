@@ -79,6 +79,10 @@
   background: color-mix(in oklab, #737373 50%, transparent);
 }
 
+.dark #products {
+  background: #0a0a0a;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
