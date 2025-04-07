@@ -2,13 +2,27 @@ import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Product from '../../models/product/productModel';
 import CategoryProduct from '../../models/product/categoryModel';
+import { UserDocument } from '../../models/user/userModel';
 
 // @desc: Get all the products
 // @route: GET /api/products
 // @access: Public
 const getProducts = asyncHandler(async (req: Request, res: Response) => {
-  const products = await Product.find();
-  res.status(200).json(products);
+  if (req.user) {
+    if ((req.user as UserDocument).role === 'user') {
+      const products = await Product.find({ user: req.user._id }).populate({
+        path: 'category',
+        select: 'name',
+      });
+      res.status(200).json(products);
+    } else {
+      const products = await Product.find().populate({
+        path: 'category',
+        select: 'name',
+      });
+      res.status(200).json(products);
+    }
+  }
 });
 
 // @desc: add product

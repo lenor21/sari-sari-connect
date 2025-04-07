@@ -1,5 +1,17 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
+import { Document, Types } from 'mongoose';
+
+interface UserDocument extends Document {
+  name: string;
+  email: string;
+  password?: string;
+  role: 'user' | 'admin' | 'store' | string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type { UserDocument };
 
 const userSchema = new mongoose.Schema(
   {

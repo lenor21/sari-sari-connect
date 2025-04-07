@@ -136,3 +136,18 @@
   border: 1px solid #eee;
   background: #eee;
 }
+
+.breadcrumb-hidden {
+  display: none;
+}
+
+.breadcrumb-ellipsis {
+  margin: 0 5px;
+}
+
+/* Adjust the breakpoint as needed */
+@media (max-width: 768px) {
+  .breadcrumb-ellipsis {
+    display: inline-block; /* Ensure it's shown on mobile */
+  }
+}
