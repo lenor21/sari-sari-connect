@@ -96,12 +96,18 @@ const Products = () => {
               <SelectValue placeholder='Category' />
             </SelectTrigger>
             <SelectContent>
-              {categoriesData.map((category: Category) => (
-                <SelectItem key={category._id} value={category.name}>
-                  {category.name.charAt(0).toUpperCase() +
-                    category.name.slice(1)}
+              {categoriesData.length > 0 ? (
+                categoriesData.map((category: Category) => (
+                  <SelectItem key={category._id} value={category.name}>
+                    {category.name.charAt(0).toUpperCase() +
+                      category.name.slice(1)}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem disabled value='no-categories'>
+                  No categories available
                 </SelectItem>
-              ))}
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -126,21 +132,22 @@ const Products = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {productsData.map((product) => (
-            <TableRow key={product._id}>
-              <TableCell className='font-medium'>{product.name}</TableCell>
-              <TableCell>{product.category.name}</TableCell>
-              <TableCell>{product.price}</TableCell>
-              <TableCell>{product.quantity}</TableCell>
-              <TableCell className='text-right'>
-                {product.createdAt.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </TableCell>
-            </TableRow>
-          ))}
+          {productsData &&
+            productsData.map((product) => (
+              <TableRow key={product._id}>
+                <TableCell className='font-medium'>{product.name}</TableCell>
+                <TableCell>{product.category.name}</TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.quantity}</TableCell>
+                <TableCell className='text-right'>
+                  {product.createdAt.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
 
           {isLoading && (
             <>

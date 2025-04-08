@@ -29,6 +29,10 @@ const items = [
         url: '/dashboard/products',
       },
       {
+        title: 'Add Product',
+        url: '/dashboard/products/add-product',
+      },
+      {
         title: 'Categories',
         url: '/dashboard/products/categories',
       },

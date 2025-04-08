@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import CategoryProduct from '../../models/product/categoryModel';
+import Product from '../../models/product/productModel';
 
 // @desc: Get all the category
 // @route: GET /api/category-products
@@ -68,6 +69,8 @@ const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
     throw new Error('User not authorized');
   }
 
+  // Delete products associated with the category
+  await Product.deleteMany({ category: category._id });
   await category.deleteOne();
 
   res.status(200).json({ deleted: category });
