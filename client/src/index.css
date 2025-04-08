@@ -79,7 +79,7 @@
   background: color-mix(in oklab, #737373 50%, transparent);
 }
 
-.dark #products {
+.dark .background-white {
   background: #0a0a0a;
 }
 

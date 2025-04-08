@@ -18,7 +18,6 @@ const BreadCrumb = () => {
   useEffect(() => {
     const handleResize = () => {
       setShowFullBreadcrumb(window.innerWidth > 768);
-      console.log('resize');
     };
 
     window.addEventListener('resize', handleResize);

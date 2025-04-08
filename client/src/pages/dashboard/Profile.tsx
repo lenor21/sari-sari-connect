@@ -85,7 +85,6 @@ const Profile = () => {
       }).unwrap();
 
       dispatch(setCredentials({ ...res }));
-      console.log(values);
     } catch (err) {
       console.error(err);
     }

@@ -10,6 +10,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['Product'],
     }),
     getProducts: builder.query({
       query: () => ({

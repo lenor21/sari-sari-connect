@@ -13,6 +13,7 @@ import Products from '@/pages/dashboard/products/Products';
 import StoreRegister from '@/pages/StoreRegister';
 import AddProduct from '@/pages/dashboard/products/AddProduct';
 import Root from '@/pages/dashboard/products/Root';
+import Category from '@/pages/dashboard/products/Category';
 
 const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
                   {
                     path: '/dashboard/products/add-product',
                     element: <AddProduct />,
+                  },
+                  {
+                    path: '/dashboard/products/categories',
+                    element: <Category />,
                   },
                 ],
               },

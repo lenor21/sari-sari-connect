@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { useEffect, useState } from 'react';
 import { useGetCategoriesQuery } from '@/features/product/categoryApiSlice';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Product {
   _id: string;
@@ -46,7 +47,9 @@ const Products = () => {
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
-  const { data: productsDataRaw } = useGetProductsQuery(userInfo._id);
+  const { data: productsDataRaw, isLoading } = useGetProductsQuery(
+    userInfo._id
+  );
   const { data: categoriesDataRaw } = useGetCategoriesQuery(userInfo?._id);
 
   useEffect(() => {
@@ -78,7 +81,7 @@ const Products = () => {
   }, [categoriesDataRaw]);
 
   return (
-    <div id='products' className='bg-white p-4 py-10'>
+    <div className='bg-white p-4 py-10 background-white'>
       <div className='mb-3 flex justify-between flex-col lg:flex-row gap-2'>
         <div className='flex flex-col gap-2 lg:flex-row'>
           <Input
@@ -137,6 +140,62 @@ const Products = () => {
               </TableCell>
             </TableRow>
           ))}
+
+          {isLoading && (
+            <>
+              <TableRow>
+                <TableCell className='font-medium'>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell className='text-right'>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className='font-medium'>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell className='text-right'>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className='font-medium'>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+                <TableCell className='text-right'>
+                  <Skeleton className='h-4 w-[150px]' />
+                </TableCell>
+              </TableRow>
+            </>
+          )}
         </TableBody>
       </Table>
     </div>
