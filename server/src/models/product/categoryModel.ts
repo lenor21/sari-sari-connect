@@ -5,7 +5,11 @@ const categoryProductSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, 'Please add a name value'],
-      unique: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Please add a user value'],
     },
   },
   { timestamps: true }

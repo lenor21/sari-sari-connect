@@ -9,19 +9,11 @@ import { UserDocument } from '../../models/user/userModel';
 // @access: Public
 const getProducts = asyncHandler(async (req: Request, res: Response) => {
   if (req.user) {
-    if ((req.user as UserDocument).role === 'user') {
-      const products = await Product.find({ user: req.user._id }).populate({
-        path: 'category',
-        select: 'name',
-      });
-      res.status(200).json(products);
-    } else {
-      const products = await Product.find().populate({
-        path: 'category',
-        select: 'name',
-      });
-      res.status(200).json(products);
-    }
+    const products = await Product.find({ user: req.user._id }).populate({
+      path: 'category',
+      select: 'name',
+    });
+    res.status(200).json(products);
   }
 });
 

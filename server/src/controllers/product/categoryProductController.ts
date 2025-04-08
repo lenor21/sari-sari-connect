@@ -6,8 +6,10 @@ import CategoryProduct from '../../models/product/categoryModel';
 // @route: GET /api/category-products
 // @access: Public
 const getCategories = asyncHandler(async (req: Request, res: Response) => {
-  const categories = await CategoryProduct.find();
-  res.status(200).json(categories);
+  if (req.user) {
+    const categories = await CategoryProduct.find({ user: req.user.id });
+    res.status(200).json(categories);
+  }
 });
 
 // @desc: add category
@@ -21,21 +23,26 @@ const addCategory = asyncHandler(async (req: Request, res: Response) => {
     throw new Error('Please fill name field');
   }
 
-  // check if category exist
-  const categoryExists = await CategoryProduct.findOne({ name });
+  if (req.user) {
+    // check if category exist
+    const categoryExists = await CategoryProduct.findOne({
+      name,
+      user: req.user._id,
+    });
 
-  if (categoryExists) {
-    res.status(400);
-    throw new Error('Category already exists');
-  }
+    if (categoryExists) {
+      res.status(400);
+      throw new Error('Category already exists');
+    }
 
-  const category = await CategoryProduct.create({ name });
+    const category = await CategoryProduct.create({ name, user: req.user._id });
 
-  if (category) {
-    res.status(200).json(category);
-  } else {
-    res.status(400);
-    throw new Error('Invalid category data');
+    if (category) {
+      res.status(200).json(category);
+    } else {
+      res.status(400);
+      throw new Error('Invalid category data');
+    }
   }
 });
 

@@ -182,6 +182,7 @@ const Profile = () => {
         <div className='lg:mx-10 mx-3 flex flex-col gap-y-2'>
           <p className='text-2xl font-bold line-clamp-1'>{userInfo.name}</p>
           <p>{userInfo.email}</p>
+          <p>{userInfo.role}</p>
         </div>
       </div>
       <div className='grid grid-cols-1 gap-3'>
