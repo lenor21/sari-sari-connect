@@ -4,7 +4,7 @@ import CategoryProduct from '../../models/product/categoryModel';
 
 // @desc: Get all the category
 // @route: GET /api/category-products
-// @access: Public
+// @access: Ptivate
 const getCategories = asyncHandler(async (req: Request, res: Response) => {
   if (req.user) {
     const categories = await CategoryProduct.find({ user: req.user.id });
@@ -14,7 +14,7 @@ const getCategories = asyncHandler(async (req: Request, res: Response) => {
 
 // @desc: add category
 // @route: POST /api/category-products
-// @access: Public
+// @access: Private
 const addCategory = asyncHandler(async (req: Request, res: Response) => {
   const { name } = req.body;
 
@@ -46,4 +46,31 @@ const addCategory = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export { getCategories, addCategory };
+// @desc: delete category
+// @route: DELETE /api/category-products
+// @access: Private
+const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
+  const category = await CategoryProduct.findById(req.params.id);
+
+  if (!category) {
+    res.status(404);
+    throw new Error('Category not found');
+  }
+
+  if (!req.user) {
+    res.status(401);
+    throw new Error('User not found');
+  }
+
+  // make sure the login user matches the link user
+  if (category.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error('User not authorized');
+  }
+
+  await category.deleteOne();
+
+  res.status(200).json({ deleted: category });
+});
+
+export { getCategories, addCategory, deleteCategory };

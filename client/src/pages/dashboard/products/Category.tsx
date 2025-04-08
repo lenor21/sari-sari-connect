@@ -24,6 +24,7 @@ import {
 import { useState, useEffect } from 'react';
 import {
   useAddCategoryMutation,
+  useDeleteCategoryMutation,
   useGetCategoriesQuery,
 } from '@/features/product/categoryApiSlice';
 import { useSelector } from 'react-redux';
@@ -55,6 +56,7 @@ const Category = () => {
   const { data: categoriesDataRaw, isLoading: loadingCategoriesData } =
     useGetCategoriesQuery(userInfo?._id);
   const [addCategory] = useAddCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   useEffect(() => {
     if (categoriesDataRaw) {
@@ -94,8 +96,43 @@ const Category = () => {
         timer: 1500,
       });
     }
-    console.log(values);
   }
+
+  const handleDelete = async (categoryId: string) => {
+    try {
+      Swal.fire({
+        color: '#0a0a0a',
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0a0a0a',
+        cancelButtonColor: '#ddd',
+        confirmButtonText: 'Yes, delete it!',
+      }).then(async (result) => {
+        await deleteCategory(categoryId).unwrap();
+
+        if (result.isConfirmed) {
+          Swal.fire({
+            color: '#0a0a0a',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+            icon: 'success',
+            confirmButtonColor: '#0a0a0a',
+          });
+        }
+      });
+    } catch (err: any) {
+      Swal.fire({
+        color: '#0a0a0a',
+        position: 'center',
+        icon: 'error',
+        title: `${err.data.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
 
   return (
     <div className='grid lg:grid-cols-2 gap-4'>
@@ -122,7 +159,7 @@ const Category = () => {
           </form>
         </Form>
       </div>
-      <div className='bg-white background-white p-6 overflow-scroll'>
+      <div className='bg-white background-white p-6 overflow-scroll lg:overflow-hidden'>
         <Table>
           <TableCaption>A list of products category.</TableCaption>
           <TableHeader>
@@ -153,7 +190,9 @@ const Category = () => {
                   </TooltipProvider>
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className='bg-red-700 py-1 px-2 rounded'>
+                      <TooltipTrigger
+                        className='bg-red-700 py-1 px-2 rounded'
+                        onClick={() => handleDelete(category._id)}>
                         <Trash className='text-white w-4' />
                       </TooltipTrigger>
                       <TooltipContent>
