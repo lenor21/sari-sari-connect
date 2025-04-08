@@ -2,17 +2,20 @@ import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Product from '../../models/product/productModel';
 import CategoryProduct from '../../models/product/categoryModel';
-import { UserDocument } from '../../models/user/userModel';
 
 // @desc: Get all the products
 // @route: GET /api/products
 // @access: Public
 const getProducts = asyncHandler(async (req: Request, res: Response) => {
   if (req.user) {
-    const products = await Product.find({ user: req.user._id }).populate({
-      path: 'category',
-      select: 'name',
-    });
+    const products = await Product.find({ user: req.user._id })
+      .populate({
+        path: 'category',
+        select: 'name',
+      })
+      .sort({
+        createdAt: -1,
+      });
     res.status(200).json(products);
   }
 });
@@ -66,4 +69,31 @@ const addProduct = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export { getProducts, addProduct };
+// @desc: delete product
+// @route: DELETE /api/products
+// @access: Private
+const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  if (!req.user) {
+    res.status(401);
+    throw new Error('User not found');
+  }
+
+  // make sure the login user matches the link user
+  if (product.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error('User not authorized');
+  }
+
+  await product.deleteOne();
+
+  res.status(200).json({ deleted: product });
+});
+
+export { getProducts, addProduct, deleteProduct };

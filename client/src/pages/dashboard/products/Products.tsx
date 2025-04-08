@@ -16,14 +16,24 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Trash, Pencil } from 'lucide-react';
 import { Link } from 'react-router';
-import { useGetProductsQuery } from '@/features/product/productsApiSlice';
+import {
+  useDeleteProductMutation,
+  useGetProductsQuery,
+} from '@/features/product/productsApiSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { useEffect, useState } from 'react';
 import { useGetCategoriesQuery } from '@/features/product/categoryApiSlice';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import Swal from 'sweetalert2';
 
 interface Product {
   _id: string;
@@ -51,6 +61,7 @@ const Products = () => {
     userInfo._id
   );
   const { data: categoriesDataRaw } = useGetCategoriesQuery(userInfo?._id);
+  const [deleteProduct] = useDeleteProductMutation();
 
   useEffect(() => {
     if (productsDataRaw) {
@@ -80,6 +91,42 @@ const Products = () => {
       setCategoriesData(processedCategories);
     }
   }, [categoriesDataRaw]);
+
+  const handleDelete = async (categoryId: string) => {
+    try {
+      Swal.fire({
+        color: '#0a0a0a',
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0a0a0a',
+        cancelButtonColor: '#ddd',
+        confirmButtonText: 'Yes, delete it!',
+      }).then(async (result) => {
+        await deleteProduct(categoryId).unwrap();
+
+        if (result.isConfirmed) {
+          Swal.fire({
+            color: '#0a0a0a',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+            icon: 'success',
+            confirmButtonColor: '#0a0a0a',
+          });
+        }
+      });
+    } catch (err: any) {
+      Swal.fire({
+        color: '#0a0a0a',
+        position: 'center',
+        icon: 'error',
+        title: `${err.data.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
 
   return (
     <div className='bg-white p-4 py-10 background-white'>
@@ -128,7 +175,8 @@ const Products = () => {
             <TableHead className='w-[200px]'>Category</TableHead>
             <TableHead className='w-[200px]'>Price</TableHead>
             <TableHead className='w-[100px]'>Quantity</TableHead>
-            <TableHead className='text-right w-[200px]'>Created At</TableHead>
+            <TableHead className='w-[100px]'>Created At</TableHead>
+            <TableHead className='text-right w-[200px]'>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -145,6 +193,30 @@ const Products = () => {
                     month: 'long',
                     day: 'numeric',
                   })}
+                </TableCell>
+                <TableCell className='text-right flex justify-end gap-1'>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger className='bg-green-700 py-1 px-2 rounded'>
+                        <Pencil className='text-white w-4' />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Edit product</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger
+                        className='bg-red-700 py-1 px-2 rounded'
+                        onClick={() => handleDelete(product._id)}>
+                        <Trash className='text-white w-4' />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Delete product</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </TableCell>
               </TableRow>
             ))}
