@@ -39,4 +39,14 @@ const protect = asyncHandler(
   }
 );
 
-export { protect };
+const authorize = (roles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (req.user && roles.includes((req.user as any).role)) {
+      next();
+    } else {
+      res.status(403).json({ message: 'Forbidden' });
+    }
+  };
+};
+
+export { protect, authorize };

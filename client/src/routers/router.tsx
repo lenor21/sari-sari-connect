@@ -14,6 +14,7 @@ import StoreRegister from '@/pages/StoreRegister';
 import AddProduct from '@/pages/dashboard/products/AddProduct';
 import Root from '@/pages/dashboard/products/Root';
 import Category from '@/pages/dashboard/products/Category';
+import StoreRoute from '@/pages/StoreRoute';
 
 const router = createBrowserRouter([
   {
@@ -53,24 +54,26 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '',
         element: <PrivateRoute />,
         children: [
           {
-            path: '/dashboard',
             element: <Dashboard />,
             children: [
               {
                 path: '/dashboard',
-                element: <Stores />,
-              },
-              {
-                path: '/dashboard/profile',
                 element: <Profile />,
               },
               {
+                path: '/dashboard/stores',
+                element: <Stores />,
+              },
+              {
                 path: '/dashboard/products',
-                element: <Root />,
+                element: (
+                  <StoreRoute>
+                    <Root />
+                  </StoreRoute>
+                ),
                 children: [
                   {
                     path: '/dashboard/products',

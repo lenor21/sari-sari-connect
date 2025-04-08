@@ -41,7 +41,7 @@ const NavBar = () => {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link to='/dashboard/profile' className='w-full'>
+                <Link to='/dashboard' className='w-full'>
                   Profile
                 </Link>
               </DropdownMenuItem>

@@ -1,5 +1,5 @@
-const Index = () => {
-  return <div className='w-full'>Index</div>;
+const Stores = () => {
+  return <div>Stores</div>;
 };
 
-export default Index;
+export default Stores;

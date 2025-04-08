@@ -25,7 +25,6 @@ const productSchema = new mongoose.Schema(
     },
     imgURL: {
       type: String,
-      required: [false, 'Please add a price value'],
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
