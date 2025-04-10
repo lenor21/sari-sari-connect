@@ -8,11 +8,11 @@ import {
   signOutUser,
   updateUserProfile,
 } from '../../controllers/user/userControllers';
-import { protect } from '../../middlewares/authMiddleware';
+import { authorize, protect } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.get('/', getUsers);
+router.get('/', protect, authorize(['store']), getUsers);
 router.post('/', addUser);
 router.post('/sign-in', signInUser);
 router.post('/sign-out', signOutUser);

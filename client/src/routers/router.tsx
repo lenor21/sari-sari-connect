@@ -15,6 +15,7 @@ import AddProduct from '@/pages/dashboard/products/AddProduct';
 import Root from '@/pages/dashboard/products/Root';
 import Category from '@/pages/dashboard/products/Category';
 import StoreRoute from '@/pages/StoreRoute';
+import Users from '@/pages/dashboard/Users';
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
               {
                 path: '/dashboard/stores',
                 element: <Stores />,
+              },
+              {
+                path: '/dashboard/users',
+                element: <Users />,
               },
               {
                 path: '/dashboard/products',

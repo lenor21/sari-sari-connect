@@ -7,6 +7,7 @@ interface UserDocument extends Document {
   email: string;
   password?: string;
   role: 'user' | 'admin' | 'store' | string;
+  stores: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +35,12 @@ const userSchema = new mongoose.Schema(
       enum: ['admin', 'user', 'store'],
       default: 'user',
     },
+    stores: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   { timestamps: true }
 );

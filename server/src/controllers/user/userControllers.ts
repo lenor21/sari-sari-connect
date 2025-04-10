@@ -3,13 +3,16 @@ import asyncHandler from 'express-async-handler';
 import User from '../../models/user/userModel';
 import bcrypt from 'bcryptjs';
 import generateToken from '../../utils/generateToken';
+import mongoose from 'mongoose';
 
 // @desc: Get all the users
 // @route: GET /api/users
 // @access: Public
 const getUsers = asyncHandler(async (req: Request, res: Response) => {
-  const users = await User.find();
-  res.status(200).json(users);
+  if (req.user) {
+    const users = await User.find({ stores: req.user._id });
+    res.status(200).json(users);
+  }
 });
 
 // @desc: Add a new user
@@ -122,6 +125,13 @@ const updateUserProfile = asyncHandler(async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         user.password = hashedPassword;
+      }
+
+      // Handle adding store IDs
+      if (req.body.stores) {
+        if (!user.stores.includes(req.body.stores)) {
+          user.stores.push(req.body.stores);
+        }
       }
 
       const updatedUser = await user.save();

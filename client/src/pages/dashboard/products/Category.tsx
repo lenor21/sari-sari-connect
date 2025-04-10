@@ -110,9 +110,9 @@ const Category = () => {
         cancelButtonColor: '#ddd',
         confirmButtonText: 'Yes, delete it!',
       }).then(async (result) => {
-        await deleteCategory(categoryId).unwrap();
-
         if (result.isConfirmed) {
+          await deleteCategory(categoryId).unwrap();
+
           Swal.fire({
             color: '#0a0a0a',
             title: 'Deleted!',
@@ -136,7 +136,7 @@ const Category = () => {
 
   return (
     <div className='grid lg:grid-cols-2 gap-4'>
-      <div className='bg-white background-white p-6'>
+      <div className='bg-white background-white p-6 rounded-xl'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
@@ -159,7 +159,7 @@ const Category = () => {
           </form>
         </Form>
       </div>
-      <div className='bg-white background-white p-6 overflow-scroll lg:overflow-hidden'>
+      <div className='bg-white background-white p-6 overflow-scroll lg:overflow-hidden rounded-xl'>
         <Table>
           <TableCaption>A list of products category.</TableCaption>
           <TableHeader>

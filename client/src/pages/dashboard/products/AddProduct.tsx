@@ -44,7 +44,7 @@ const formSchema = z.object({
   price: z.coerce.number(),
   quantity: z.coerce.number(),
   category: z.string({
-    required_error: 'Please select an email to display.',
+    required_error: 'You cannot add a product if your category is empty.',
   }),
   imgURL: z.string(),
 });
@@ -218,7 +218,7 @@ const AddProduct = () => {
                           ))
                         ) : (
                           <SelectItem disabled value='no-categories'>
-                            No categories available
+                            Please add a category to proceed
                           </SelectItem>
                         )}
                       </SelectContent>
