@@ -3,7 +3,6 @@ import asyncHandler from 'express-async-handler';
 import User from '../../models/user/userModel';
 import bcrypt from 'bcryptjs';
 import generateToken from '../../utils/generateToken';
-import mongoose from 'mongoose';
 
 // @desc: Get all the users
 // @route: GET /api/users
@@ -97,7 +96,10 @@ const signOutUser = asyncHandler(async (req: Request, res: Response) => {
 // @access: Private
 const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
   if (req.user) {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).populate({
+      path: 'stores',
+      select: { name: 1, role: 1 },
+    });
 
     if (!user) {
       res.status(404);

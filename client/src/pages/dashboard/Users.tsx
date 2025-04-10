@@ -95,7 +95,7 @@ const Users = () => {
               </Link>
             ))
           ) : (
-            <p>No categories available</p>
+            <p>No users available</p>
           )}
         </CardContent>
       </Card>

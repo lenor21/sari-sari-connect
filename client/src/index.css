@@ -136,7 +136,6 @@
 
 #content {
   height: calc(100svh - 120px);
-  overflow-y: scroll;
   border: 1px solid #eee;
   background: #eee;
 }
