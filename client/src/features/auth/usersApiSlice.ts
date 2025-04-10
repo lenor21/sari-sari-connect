@@ -10,12 +10,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['User'],
     }),
     logout: builder.mutation({
       query: () => ({
         url: `${USERS_URL}/sign-out`,
         method: 'POST',
       }),
+      invalidatesTags: ['User'],
     }),
     register: builder.mutation({
       query: (data) => ({
@@ -23,6 +25,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['User'],
     }),
     update: builder.mutation({
       query: (data) => ({
@@ -30,6 +33,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: data,
       }),
+      invalidatesTags: ['User'],
+    }),
+    getUsers: builder.query({
+      query: () => ({
+        url: `${USERS_URL}`,
+        method: 'GET',
+      }),
+      providesTags: ['User'],
     }),
   }),
 });
@@ -39,4 +50,5 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useUpdateMutation,
+  useGetUsersQuery,
 } = usersApiSlice;

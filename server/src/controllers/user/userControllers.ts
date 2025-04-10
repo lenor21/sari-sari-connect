@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
 // @access: Public
 const getUsers = asyncHandler(async (req: Request, res: Response) => {
   if (req.user) {
-    const users = await User.find({ stores: req.user._id });
+    const users = await User.find({ stores: { $in: [req.user._id] } });
     res.status(200).json(users);
   }
 });
