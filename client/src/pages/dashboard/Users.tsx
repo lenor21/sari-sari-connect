@@ -25,11 +25,9 @@ const Users = () => {
 
   useEffect(() => {
     if (usersDataRaw) {
-      // Convert createdAt string to Date object
-      const processedUsers = usersDataRaw.map((product: Product) => {
+      const processedUsers = usersDataRaw.map((user: User) => {
         return {
-          ...product,
-          createdAt: new Date(product.createdAt),
+          ...user,
         };
       });
 

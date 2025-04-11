@@ -164,6 +164,22 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
+// @desc: get stores
+// @route: GET /api/users/stores
+// @access: Public
+const getStores = asyncHandler(async (req: Request, res: Response) => {
+  const page = parseInt(String(req.query.page)) || 1;
+  const limit = parseInt(String(req.query.limit)) || 1;
+  const skip = (page - 1) * limit;
+
+  const totalStores = await User.countDocuments({ role: 'store' });
+  const totalPages = Math.ceil(totalStores / limit);
+
+  const stores = await User.find({ role: 'store' }).skip(skip).limit(limit);
+
+  res.status(200).json({ stores, currentPage: page, totalPages, totalStores });
+});
+
 export {
   getUsers,
   addUser,
@@ -172,4 +188,5 @@ export {
   getUserProfile,
   updateUserProfile,
   deleteUser,
+  getStores,
 };

@@ -42,6 +42,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ['User'],
     }),
+    getStores: builder.query({
+      query: (data) => ({
+        url: `${USERS_URL}/stores?page=${data.page}&limit=${data.limit}`,
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
   }),
 });
 
@@ -51,4 +58,5 @@ export const {
   useRegisterMutation,
   useUpdateMutation,
   useGetUsersQuery,
+  useGetStoresQuery,
 } = usersApiSlice;
