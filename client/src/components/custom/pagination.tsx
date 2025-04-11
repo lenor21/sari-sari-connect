@@ -39,12 +39,8 @@ const MyCustomPagination: React.FC<MyCustomPaginationProps> = ({
           </PaginationLink>
         </PaginationItem>
 
-        <PaginationItem>
-          <PaginationLink
-            className={`${currentPage === 4 ? '' : 'hidden'}`}
-            onClick={() => handlePageChange(1)}>
-            2
-          </PaginationLink>
+        <PaginationItem className={`${currentPage === 4 ? '' : 'hidden'}`}>
+          <PaginationLink onClick={() => handlePageChange(1)}>2</PaginationLink>
         </PaginationItem>
 
         {currentPage > 4 && (
@@ -53,32 +49,28 @@ const MyCustomPagination: React.FC<MyCustomPaginationProps> = ({
           </PaginationItem>
         )}
 
-        <PaginationItem>
-          <PaginationLink
-            className={`${currentPage < 3 && 'hidden'}`}
-            onClick={() => handlePageChange(currentPage - 1)}>
+        <PaginationItem className={`${currentPage < 3 && 'hidden'}`}>
+          <PaginationLink onClick={() => handlePageChange(currentPage - 1)}>
             {currentPage - 1}
           </PaginationLink>
         </PaginationItem>
 
-        <PaginationItem>
-          <PaginationLink
-            isActive={currentPage === currentPage}
-            className={`${
-              currentPage === 1 || currentPage === totalPages ? 'hidden' : ''
-            }`}>
+        <PaginationItem
+          className={`${
+            currentPage === 1 || currentPage === totalPages ? 'hidden' : ''
+          }`}>
+          <PaginationLink isActive={currentPage === currentPage}>
             {currentPage}
           </PaginationLink>
         </PaginationItem>
 
-        <PaginationItem>
-          <PaginationLink
-            className={`${
-              currentPage === totalPages || currentPage === totalPages - 1
-                ? 'hidden'
-                : ''
-            }`}
-            onClick={() => handlePageChange(currentPage + 1)}>
+        <PaginationItem
+          className={`${
+            currentPage === totalPages || currentPage === totalPages - 1
+              ? 'hidden'
+              : ''
+          }`}>
+          <PaginationLink onClick={() => handlePageChange(currentPage + 1)}>
             {currentPage + 1}
           </PaginationLink>
         </PaginationItem>
@@ -89,15 +81,14 @@ const MyCustomPagination: React.FC<MyCustomPaginationProps> = ({
           </PaginationItem>
         )}
 
-        <PaginationItem>
-          <PaginationLink
-            className={`${currentPage === totalPages - 3 ? '' : 'hidden'}`}
-            onClick={() => handlePageChange(1)}>
+        <PaginationItem
+          className={`${currentPage === totalPages - 3 ? '' : 'hidden'}`}>
+          <PaginationLink onClick={() => handlePageChange(1)}>
             {totalPages - 1}
           </PaginationLink>
         </PaginationItem>
 
-        <PaginationItem>
+        <PaginationItem className={`${totalPages === 1 ? 'hidden' : ''}`}>
           <PaginationLink
             onClick={() => handlePageChange(totalPages)}
             isActive={currentPage === totalPages}>

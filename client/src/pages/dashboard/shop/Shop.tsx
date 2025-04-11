@@ -16,7 +16,7 @@ const Shop = () => {
   const [storesData, setStoresData] = useState<Store[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [limit, setLimit] = useState(4);
+  const [limit, setLimit] = useState(5);
 
   const { data: storesDataRaw } = useGetStoresQuery({
     page: currentPage,
@@ -55,11 +55,11 @@ const Shop = () => {
           <CardTitle>Stores</CardTitle>
         </CardHeader>
         <CardContent className='px-1 lg:px-0'>
-          <div className='grid grid-cols-2 lg:grid-cols-4 gap-2 bg-white background-white p-2 lg:p-4'>
+          <div className='grid grid-cols-2 lg:grid-cols-5 gap-2 bg-white background-white p-2 lg:p-4'>
             {storesData.length > 0 ? (
               storesData.map((store: Store) => (
                 <Link
-                  to='/dashboard'
+                  to={store._id}
                   className='rounded-lg shadow-lg border border-[#eee] overflow-hidden group'
                   key={store._id}>
                   <div className='w-full overflow-hidden'>
