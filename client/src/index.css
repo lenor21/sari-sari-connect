@@ -153,4 +153,11 @@
   .breadcrumb-ellipsis {
     display: inline-block; /* Ensure it's shown on mobile */
   }
+
+  .breadcrumb-list li:last-child span {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
