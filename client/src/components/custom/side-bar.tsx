@@ -43,11 +43,6 @@ const items = [
         roles: ['store'],
       },
       {
-        title: 'Users',
-        url: '/dashboard/users',
-        roles: ['store'],
-      },
-      {
         title: 'Shop',
         url: '/dashboard/shop',
         roles: ['user'],

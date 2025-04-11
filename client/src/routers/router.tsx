@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router';
 import App from '@/App';
 import Home from '@/pages/Home';
 import NotFound from '@/pages/NotFound';
-import Stores from '@/pages/dashboard/Stores';
+import ShopProducts from '@/pages/dashboard/shop/StopProducts';
 import Dashboard from '@/pages/dashboard/Dashboard';
 import Profile from '@/pages/dashboard/Profile';
 import SignIn from '@/pages/SignIn';
@@ -16,11 +16,10 @@ import Root from '@/pages/dashboard/products/Root';
 import Category from '@/pages/dashboard/products/Category';
 import StoreRoute from '@/pages/StoreRoute';
 import Users from '@/pages/dashboard/Users';
-import Shop from '@/pages/dashboard/Shop';
+import Shop from '@/pages/dashboard/shop/Shop';
 
 const router = createBrowserRouter([
   {
-    path: '/',
     element: <App />,
     children: [
       {
@@ -66,19 +65,24 @@ const router = createBrowserRouter([
                 element: <Profile />,
               },
               {
-                path: '/dashboard/stores',
-                element: <Stores />,
-              },
-              {
                 path: '/dashboard/users',
                 element: <Users />,
               },
               {
-                path: '/dashboard/shop',
-                element: <Shop />,
+                element: <Root />,
+                children: [
+                  {
+                    path: '/dashboard/shop',
+                    element: <Shop />,
+                  },
+                  {
+                    path: '/dashboard/shop/:id',
+                    element: <ShopProducts />,
+                  },
+                ],
               },
+
               {
-                path: '/dashboard/products',
                 element: (
                   <StoreRoute>
                     <Root />

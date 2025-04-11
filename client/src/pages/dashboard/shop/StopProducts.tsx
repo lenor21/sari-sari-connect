@@ -12,7 +12,7 @@ const Stores = () => {
   return (
     <div>
       <div>
-        <Link to='#' className='grid'>
+        <Link to='#'>
           <Card>
             <CardHeader>
               <CardTitle>Card Title</CardTitle>
