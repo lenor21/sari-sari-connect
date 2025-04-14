@@ -138,6 +138,7 @@
   height: calc(100svh - 120px);
   border: 1px solid #eee;
   background: #eee;
+  overflow: scroll;
 }
 
 .breadcrumb-hidden {
