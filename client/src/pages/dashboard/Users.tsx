@@ -32,7 +32,6 @@ const Users = () => {
       });
 
       setUsersData(processedUsers);
-      console.log(processedUsers);
     }
   }, [usersDataRaw]);
 

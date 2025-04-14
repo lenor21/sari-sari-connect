@@ -36,13 +36,8 @@ const Shop = () => {
       setStoresData(processedStores);
       setCurrentPage(storesDataRaw.currentPage);
       setTotalPages(storesDataRaw.totalPages);
-      console.log(processedStores);
     }
   }, [storesDataRaw]);
-
-  useEffect(() => {
-    console.log(storesData, currentPage, totalPages);
-  }, [storesData, currentPage, totalPages]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);

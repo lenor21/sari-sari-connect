@@ -8,7 +8,7 @@ import { authorize, protect } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.get('/', protect, getProducts);
+router.get('/:id', getProducts);
 router.post('/', protect, authorize(['store']), addProduct);
 router.delete('/:id', protect, deleteProduct);
 

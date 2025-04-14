@@ -74,7 +74,6 @@ const Products = () => {
       });
 
       setProductsData(processedProducts);
-      console.log(processedProducts);
     }
   }, [productsDataRaw]);
 

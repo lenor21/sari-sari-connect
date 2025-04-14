@@ -13,8 +13,8 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Product'],
     }),
     getProducts: builder.query({
-      query: () => ({
-        url: `${PRODUCTS_URL}`,
+      query: (userId) => ({
+        url: `${PRODUCTS_URL}/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Product'],

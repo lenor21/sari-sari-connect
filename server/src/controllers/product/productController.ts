@@ -7,17 +7,15 @@ import CategoryProduct from '../../models/product/categoryModel';
 // @route: GET /api/products
 // @access: Public
 const getProducts = asyncHandler(async (req: Request, res: Response) => {
-  if (req.user) {
-    const products = await Product.find({ user: req.user._id })
-      .populate({
-        path: 'category',
-        select: 'name',
-      })
-      .sort({
-        createdAt: -1,
-      });
-    res.status(200).json(products);
-  }
+  const products = await Product.find({ user: req.params.id })
+    .populate({
+      path: 'category',
+      select: 'name',
+    })
+    .sort({
+      createdAt: -1,
+    });
+  res.status(200).json(products);
 });
 
 // @desc: add product

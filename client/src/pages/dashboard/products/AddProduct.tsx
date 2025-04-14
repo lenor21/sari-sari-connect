@@ -106,8 +106,6 @@ const AddProduct = () => {
       });
 
       navigate('/dashboard/products');
-
-      console.log(product);
     } catch (err: any) {
       Swal.fire({
         color: '#0a0a0a',
