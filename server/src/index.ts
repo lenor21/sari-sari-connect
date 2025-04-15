@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import productRoute from './routes/product/productRoute';
 import catgeoryProductRoute from './routes/product/categoryProductRoute';
+import cartRoute from './routes/cart/cartRoutes';
 
 dotenv.config();
 connectDB();
@@ -23,6 +24,7 @@ app.use(cors());
 app.use('/api/users', userRoute);
 app.use('/api/products', productRoute);
 app.use('/api/category-products', catgeoryProductRoute);
+app.use('/api/cart', cartRoute);
 app.use(errorHandler);
 
 app.listen(port, () => {
