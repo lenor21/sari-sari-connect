@@ -2,7 +2,6 @@ import MyCustomPagination from '@/components/custom/pagination';
 import { Link } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-
 import { useGetStoresQuery } from '@/features/auth/usersApiSlice';
 
 interface Store {

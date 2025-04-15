@@ -23,9 +23,9 @@ import { RootState } from '@/app/store';
 // Menu items.
 const items = [
   {
-    title: 'Store',
+    title: 'Manage Store',
     isActive: true,
-    roles: ['store', 'user'],
+    roles: ['store'],
     items: [
       {
         title: 'Products',
@@ -42,10 +42,22 @@ const items = [
         url: '/dashboard/products/categories',
         roles: ['store'],
       },
+    ],
+  },
+  {
+    title: 'Store',
+    isActive: true,
+    roles: ['store', 'user'],
+    items: [
       {
         title: 'Shop',
         url: '/dashboard/shop',
-        roles: ['user'],
+        roles: ['store', 'user'],
+      },
+      {
+        title: 'Cart',
+        url: '/dashboard/cart',
+        roles: ['store', 'user'],
       },
     ],
   },

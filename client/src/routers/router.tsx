@@ -17,6 +17,7 @@ import Category from '@/pages/dashboard/products/Category';
 import StoreRoute from '@/pages/StoreRoute';
 import Users from '@/pages/dashboard/Users';
 import Shop from '@/pages/dashboard/shop/Shop';
+import Cart from '@/pages/dashboard/shop/Cart';
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
                   {
                     path: '/dashboard/shop',
                     element: <Shop />,
+                  },
+                  {
+                    path: '/dashboard/cart',
+                    element: <Cart />,
                   },
                   {
                     path: '/dashboard/shop/:id',

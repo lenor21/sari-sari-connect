@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useGetProductsQuery } from '@/features/product/productsApiSlice';
 import { useEffect, useState } from 'react';
+import ShopProductCard from '@/components/custom/shop-product-card';
 
 interface Product {
   _id: string;
@@ -44,29 +45,7 @@ const ShopProducts = () => {
           <div className='grid grid-cols-2 lg:grid-cols-5 gap-2 bg-white background-white p-2 lg:p-4'>
             {productsData.length > 0 ? (
               productsData.map((product: Product) => (
-                <Link
-                  to={product._id}
-                  className='rounded-lg shadow-lg border border-[#eee] overflow-hidden group'
-                  key={product._id}>
-                  <div className='w-full overflow-hidden'>
-                    <img
-                      src='https://media.istockphoto.com/id/157587362/photo/detailed-close-up-of-sliced-grain-bread-on-white-background.jpg?s=2048x2048&w=is&k=20&c=ut6-wCXQie85gZXY2yXR0aGgNcVqF7u9qUgWOjkgCLs='
-                      alt='profile'
-                      className='w-full object-cover group-hover:scale-[1.2] transition-all'
-                    />
-                  </div>
-                  <div className='p-3 group-hover:opacity-50 transition-all'>
-                    <p className='text-sm lg:text-xl font-medium line-clamp-1'>
-                      {product.name}
-                    </p>
-                    <p className='text-sm text-[#737373] line-clamp-2'>
-                      ₱ {product.price}
-                    </p>
-                    <p className='text-sm text-[#737373] line-clamp-2'>
-                      Stocks: {product.quantity}
-                    </p>
-                  </div>
-                </Link>
+                <ShopProductCard key={product._id} {...product} />
               ))
             ) : (
               <p>No products available</p>
