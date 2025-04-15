@@ -25,8 +25,6 @@ const NavBar = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const { cartItems } = useSelector((state: RootState) => state.cart);
 
-  console.log(cartItems.length);
-
   return (
     <div className='border border-b-[1px] border-b-[#e5e5e5] w-full h-14 fixed top-0 left-0 flex items-center justify-between px-4'>
       <Link
