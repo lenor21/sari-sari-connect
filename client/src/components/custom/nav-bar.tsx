@@ -23,7 +23,6 @@ import {
 
 const NavBar = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const { cartItems } = useSelector((state: RootState) => state.cart);
 
   return (
     <div className='border border-b-[1px] border-b-[#e5e5e5] w-full h-14 fixed top-0 left-0 flex items-center justify-between px-4'>
@@ -42,16 +41,12 @@ const NavBar = () => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <Link to='/' className='block relative mr-2'>
-                    {cartItems.length >= 1 ? (
-                      <Badge
-                        variant='destructive'
-                        className='absolute top-[-12px] left-[8px]'>
-                        {cartItems.length}
-                      </Badge>
-                    ) : (
-                      ''
-                    )}
+                  <Link to='/dashboard/cart' className='block relative mr-2'>
+                    <Badge
+                      variant='destructive'
+                      className='absolute top-[-12px] left-[8px]'>
+                      11
+                    </Badge>
 
                     <ShoppingCart />
                   </Link>

@@ -12,46 +12,9 @@ import { useGetCartQuery } from '@/features/product/cartApiSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { useState, useEffect } from 'react';
+import { StoreCart } from '@/types/cart/cartTypes';
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  password: string; // **Important:** In a real application, you should *never* include the password in your response!  This is a major security vulnerability.
-  role: string;
-  stores: string[]; // Or possibly ObjectId[] if these are references
-  createdAt: string; // Store as string (ISO 8601)
-  updatedAt: string; // Store as string (ISO 8601)
-  __v: number;
-}
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  category: string; // Or ObjectId
-  imgURL: string;
-  user: string; // Or ObjectId
-  createdAt: string; // Store as string (ISO 8601)
-  updatedAt: string; // Store as string (ISO 8601)
-  __v: number;
-}
-
-interface Item {
-  product: Product;
-  quantity: number;
-  _id: string;
-}
-
-interface StoreCart {
-  store: User; //  Corrected:  'store' is the User type, which contains store info.
-  items: Item[];
-  _id: string;
-}
-
-interface Cart {
+export interface Cart {
   _id: string;
   user: string; // Or ObjectId
   stores: StoreCart[];
@@ -61,7 +24,7 @@ interface Cart {
 }
 
 const Cart = () => {
-  const [cartData, setCartData] = useState<Cart>();
+  const [cartData, setCartData] = useState<Cart | undefined>();
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
@@ -73,8 +36,36 @@ const Cart = () => {
     }
   }, [cartDataRaw]);
 
+  if (!cartData || !cartData.stores || cartData.stores.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Shopping Cart</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Your cart is empty.</p>
+        </CardContent>
+        <CardFooter>
+          <Button asChild>
+            <Link to='/dashboard/shop'>Continue Shopping</Link>
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  let totalPrice: number;
+
   if (cartData) {
-    console.log(cartData.stores);
+    // Calculate total price
+    totalPrice = cartData.stores.reduce((total, storeCart) => {
+      return (
+        total +
+        storeCart.items.reduce((storeTotal, item) => {
+          return storeTotal + item.product.price * item.quantity;
+        }, 0)
+      );
+    }, 0);
   }
 
   return (
@@ -106,7 +97,7 @@ const Cart = () => {
                         <div className='lg:col-span-3'>
                           <p className='text-2xl'>{item.product.name}</p>
                           <p className='text-[#737373]'>
-                            ₱{item.product.price}
+                            ₱{item.product.price.toFixed(2)}
                           </p>
                         </div>
                         <div className='flex items-center gap-2 col-span-2 lg:col-span-1'>
@@ -119,7 +110,7 @@ const Cart = () => {
                           <Button variant='outline'>+</Button>
                         </div>
                         <p className='grid place-items-center col-span-2 lg:col-span-1'>
-                          ₱123
+                          ₱{totalPrice.toFixed(2)}
                         </p>
                       </li>
                     ))}
@@ -132,7 +123,7 @@ const Cart = () => {
           <div className='flex gap-2 lg:gap-4 flex-col lg:flex-row w-full'>
             <Button className='w-full lg:w-52'>Checkout</Button>
             <Button variant='outline' className='w-full lg:w-52'>
-              <Link to='/'>Continue Shopping</Link>
+              <Link to='/dashboard/shop'>Continue Shopping</Link>
             </Button>
           </div>
         </CardFooter>

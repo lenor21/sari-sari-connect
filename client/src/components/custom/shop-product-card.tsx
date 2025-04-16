@@ -64,7 +64,7 @@ const ShopProductCard = ({ ...product }) => {
               {product.name}
             </p>
             <p className='text-sm text-[#737373] line-clamp-2'>
-              ₱{product.price}
+              ₱{product.price.toFixed(2)}
             </p>
           </div>
         </div>
@@ -74,7 +74,7 @@ const ShopProductCard = ({ ...product }) => {
           <DialogTitle className='font-extrabold text-3xl'>
             {product.name}
           </DialogTitle>
-          <DialogDescription>₱{product.price}</DialogDescription>
+          <DialogDescription>₱{product.price.toFixed(2)}</DialogDescription>
         </DialogHeader>
         <div className='grid gap-4 py-4'>
           <div className='flex flex-col gap-2'>
