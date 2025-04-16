@@ -23,6 +23,7 @@ import {
 
 const NavBar = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
+  const { cartTotal } = useSelector((state: RootState) => state.cart);
 
   return (
     <div className='border border-b-[1px] border-b-[#e5e5e5] w-full h-14 fixed top-0 left-0 flex items-center justify-between px-4'>
@@ -45,7 +46,7 @@ const NavBar = () => {
                     <Badge
                       variant='destructive'
                       className='absolute top-[-12px] left-[8px]'>
-                      11
+                      {cartTotal}
                     </Badge>
 
                     <ShoppingCart />

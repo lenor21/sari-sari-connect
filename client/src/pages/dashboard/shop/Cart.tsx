@@ -54,19 +54,16 @@ const Cart = () => {
     );
   }
 
-  let totalPrice: number;
+  let subTotal: number;
 
-  if (cartData) {
-    // Calculate total price
-    totalPrice = cartData.stores.reduce((total, storeCart) => {
-      return (
-        total +
-        storeCart.items.reduce((storeTotal, item) => {
-          return storeTotal + item.product.price * item.quantity;
-        }, 0)
-      );
-    }, 0);
-  }
+  subTotal = cartData.stores.reduce((total, storeCart) => {
+    return (
+      total +
+      storeCart.items.reduce((storeTotal, item) => {
+        return storeTotal + item.product.price * item.quantity;
+      }, 0)
+    );
+  }, 0);
 
   return (
     <div>
@@ -110,7 +107,7 @@ const Cart = () => {
                           <Button variant='outline'>+</Button>
                         </div>
                         <p className='grid place-items-center col-span-2 lg:col-span-1'>
-                          ₱{totalPrice.toFixed(2)}
+                          ₱{(item.product.price * item.quantity).toFixed(2)}
                         </p>
                       </li>
                     ))}
@@ -119,7 +116,7 @@ const Cart = () => {
             ))}
         </CardContent>
         <CardFooter className='flex flex-col items-start gap-4 mt-10'>
-          <p>Subtotal:</p>
+          <p>Subtotal: ₱{subTotal.toFixed(2)}</p>
           <div className='flex gap-2 lg:gap-4 flex-col lg:flex-row w-full'>
             <Button className='w-full lg:w-52'>Checkout</Button>
             <Button variant='outline' className='w-full lg:w-52'>

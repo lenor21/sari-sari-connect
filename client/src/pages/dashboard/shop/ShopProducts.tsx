@@ -45,7 +45,7 @@ const ShopProducts = () => {
           <div className='grid grid-cols-2 lg:grid-cols-5 gap-2 bg-white background-white p-2 lg:p-4'>
             {productsData.length > 0 ? (
               productsData.map((product: Product) => (
-                <ShopProductCard key={product._id} {...product} />
+                <ShopProductCard key={product._id} {...product} id={id} />
               ))
             ) : (
               <p>No products available</p>

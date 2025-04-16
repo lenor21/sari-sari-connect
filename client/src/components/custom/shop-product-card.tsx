@@ -15,18 +15,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useDispatch } from 'react-redux';
-import { addItem } from '@/features/product/cartSlice';
+import { useAddCartMutation } from '@/features/product/cartApiSlice';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
-const ShopProductCard = ({ ...product }) => {
+interface ShopProductCardProps {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  id: string;
+  [key: string]: any;
+}
+
+const ShopProductCard: React.FC<ShopProductCardProps> = (props) => {
   const [quantity, setQuantity] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [addCart] = useAddCartMutation();
+
+  const navigate = useNavigate();
 
   const options = [];
 
-  const dispatch = useDispatch();
-
-  for (let i = 1; i <= product.quantity; i++) {
+  for (let i = 1; i <= props.quantity; i++) {
     options.push(
       <SelectItem key={i} value={String(i)}>
         {i}
@@ -34,14 +46,15 @@ const ShopProductCard = ({ ...product }) => {
     );
   }
 
-  const handleAddToCart = () => {
-    const cartItem = {
-      product: { ...product, createdAt: product.createdAt.toISOString() },
+  const handleAddToCart = async () => {
+    await addCart({
+      product: props._id,
       quantity: quantity,
-    };
-    dispatch(addItem(cartItem));
+      store: props.id,
+    }).unwrap();
 
-    console.log(cartItem);
+    setIsDialogOpen(false);
+    navigate('/dashboard/cart');
   };
 
   const handleQuantityChange = (value: string) => {
@@ -49,7 +62,7 @@ const ShopProductCard = ({ ...product }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <div className='rounded-lg shadow-lg border border-[#eee] overflow-hidden group cursor-pointer'>
           <div className='w-full overflow-hidden'>
@@ -61,10 +74,10 @@ const ShopProductCard = ({ ...product }) => {
           </div>
           <div className='p-3 group-hover:opacity-50 transition-all'>
             <p className='text-sm lg:text-xl font-medium line-clamp-1'>
-              {product.name}
+              {props.name}
             </p>
             <p className='text-sm text-[#737373] line-clamp-2'>
-              ₱{product.price.toFixed(2)}
+              ₱{props.price.toFixed(2)}
             </p>
           </div>
         </div>
@@ -72,9 +85,9 @@ const ShopProductCard = ({ ...product }) => {
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle className='font-extrabold text-3xl'>
-            {product.name}
+            {props.name}
           </DialogTitle>
-          <DialogDescription>₱{product.price.toFixed(2)}</DialogDescription>
+          <DialogDescription>₱{props.price.toFixed(2)}</DialogDescription>
         </DialogHeader>
         <div className='grid gap-4 py-4'>
           <div className='flex flex-col gap-2'>
