@@ -125,7 +125,9 @@ const Cart = () => {
                             type='number'
                             value={item.quantity}
                             className='min-w-15'
-                            onChange={() => handleQuantityChange(item._id)}
+                            onChange={() =>
+                              handleQuantityChange(item._id, item.quantity)
+                            }
                           />
                           <Button
                             variant='outline'
