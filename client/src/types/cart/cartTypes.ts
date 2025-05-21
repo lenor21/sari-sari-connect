@@ -2,11 +2,11 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  password: string; // **Important:** In a real application, you should *never* include the password in your response!  This is a major security vulnerability.
+  password: string;
   role: string;
-  stores: string[]; // Or possibly ObjectId[] if these are references
-  createdAt: string; // Store as string (ISO 8601)
-  updatedAt: string; // Store as string (ISO 8601)
+  stores: string[];
+  createdAt: string;
+  updatedAt: string;
   __v: number;
 }
 
@@ -16,11 +16,11 @@ export interface Product {
   description: string;
   price: number;
   quantity: number;
-  category: string; // Or ObjectId
+  category: string;
   imgURL: string;
-  user: string; // Or ObjectId
-  createdAt: string; // Store as string (ISO 8601)
-  updatedAt: string; // Store as string (ISO 8601)
+  user: string;
+  createdAt: string;
+  updatedAt: string;
   __v: number;
 }
 
@@ -31,7 +31,7 @@ export interface Item {
 }
 
 export interface StoreCart {
-  store: User; //  Corrected:  'store' is the User type, which contains store info.
+  store: User;
   items: Item[];
   _id: string;
 }

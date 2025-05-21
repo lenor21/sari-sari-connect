@@ -4,53 +4,53 @@ import { Outlet } from 'react-router';
 import BreadCrumb from '@/components/custom/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { StoreCart } from '@/types/cart/cartTypes';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useGetCartQuery } from '@/features/product/cartApiSlice';
-import { RootState } from '@/app/store';
-import { addTotal } from '@/features/product/cartSlice';
+// import { useState, useEffect } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { useGetCartQuery } from '@/features/product/cartApiSlice';
+// import { RootState } from '@/app/store';
+// import { addTotal } from '@/features/product/cartSlice';
 
 export interface Cart {
   _id: string;
-  user: string; // Or ObjectId
+  user: string;
   stores: StoreCart[];
-  createdAt: string; // Store as string (ISO 8601)
-  updatedAt: string; // Store as string (ISO 8601)
+  createdAt: string;
+  updatedAt: string;
   __v: number;
 }
 
 export default function Layout() {
-  const [cartData, setCartData] = useState<Cart | undefined>();
+  // const [cartData, setCartData] = useState<Cart | undefined>();
 
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  // const { userInfo } = useSelector((state: RootState) => state.auth);
 
-  const { data: cartDataRaw } = useGetCartQuery(userInfo._id);
+  // const { data: cartDataRaw } = useGetCartQuery(userInfo._id);
 
-  useEffect(() => {
-    if (cartDataRaw) {
-      setCartData(cartDataRaw);
-    }
-  }, [cartDataRaw]);
+  // useEffect(() => {
+  //   if (cartDataRaw) {
+  //     setCartData(cartDataRaw);
+  //   }
+  // }, [cartDataRaw]);
 
-  const getTotalItems = (cart: Cart): number => {
-    let total = 0;
+  // const getTotalItems = (cart: Cart): number => {
+  //   let total = 0;
 
-    cart.stores.forEach((storeCart) => {
-      storeCart.items.forEach((item) => {
-        total += item.quantity;
-      });
-    });
+  //   cart.stores.forEach((storeCart) => {
+  //     storeCart.items.forEach((item) => {
+  //       total += item.quantity;
+  //     });
+  //   });
 
-    return total;
-  };
+  //   return total;
+  // };
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  if (cartData) {
-    const totalCart = getTotalItems(cartData);
+  // if (cartData) {
+  //   const totalCart = getTotalItems(cartData);
 
-    dispatch(addTotal(totalCart));
-  }
+  //   dispatch(addTotal(totalCart));
+  // }
 
   return (
     <div>

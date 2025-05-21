@@ -184,7 +184,7 @@ const Products = () => {
               <TableRow key={product._id}>
                 <TableCell className='font-medium'>{product.name}</TableCell>
                 <TableCell>{product.category.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
+                <TableCell>₱{product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell className='text-right'>
                   {product.createdAt.toLocaleDateString('en-US', {
@@ -196,7 +196,7 @@ const Products = () => {
                 <TableCell className='text-right flex justify-end gap-1'>
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className='bg-green-700 py-1 px-2 rounded'>
+                      <TooltipTrigger className='bg-green-700 py-1 px-2 rounded cursor-pointer'>
                         <Pencil className='text-white w-4' />
                       </TooltipTrigger>
                       <TooltipContent>
@@ -207,7 +207,7 @@ const Products = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger
-                        className='bg-red-700 py-1 px-2 rounded'
+                        className='bg-red-700 py-1 px-2 rounded cursor-pointer'
                         onClick={() => handleDelete(product._id)}>
                         <Trash className='text-white w-4' />
                       </TooltipTrigger>

@@ -82,11 +82,13 @@ const Shop = () => {
           </div>
         </CardContent>
 
-        <MyCustomPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-        />
+        {storesData.length > 0 && (
+          <MyCustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
+        )}
       </Card>
     </div>
   );

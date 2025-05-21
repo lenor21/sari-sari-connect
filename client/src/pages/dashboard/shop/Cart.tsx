@@ -25,6 +25,7 @@ export interface Cart {
 
 const Cart = () => {
   const [cartData, setCartData] = useState<Cart | undefined>();
+  const [count, setCount] = useState(1);
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
@@ -65,6 +66,21 @@ const Cart = () => {
     );
   }, 0);
 
+  const handleQuantityChange = (itemId: string, itemCount: number) => {
+    console.log(itemId, itemCount);
+  };
+
+  const handleIncrement = (itemId: string, itemCount: number) => {
+    console.log(itemId, itemCount);
+  };
+
+  // Handler for the '-' button click
+  const handleDecrement = (itemId: string, itemCount: number) => {
+    console.log(itemId, itemCount);
+  };
+
+  console.log(cartData.stores);
+
   return (
     <div>
       <Card>
@@ -83,7 +99,7 @@ const Cart = () => {
                     storeCart.items.map((item) => (
                       <li
                         key={item._id}
-                        className='grid grid-cols-2 lg:grid-cols-6 gap-4 py-5 lg:py-10 lg:px-5 border border-y-1 border-x-0'>
+                        className='grid grid-cols-2 lg:grid-cols-8 gap-4 py-5 lg:py-10 lg:px-5 border border-y-1 border-x-0'>
                         <div className='h-16 w-16'>
                           <img
                             src='https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
@@ -91,22 +107,35 @@ const Cart = () => {
                             className='h-full object-cover'
                           />
                         </div>
-                        <div className='lg:col-span-3'>
+                        <div className='lg:col-span-4'>
                           <p className='text-2xl'>{item.product.name}</p>
                           <p className='text-[#737373]'>
                             ₱{item.product.price.toFixed(2)}
                           </p>
                         </div>
-                        <div className='flex items-center gap-2 col-span-2 lg:col-span-1'>
-                          <Button variant='outline'>-</Button>
+                        <div className='flex items-center gap-2 col-span-3 lg:col-span-2'>
+                          <Button
+                            variant='outline'
+                            onClick={() =>
+                              handleDecrement(item._id, item.quantity)
+                            }>
+                            -
+                          </Button>
                           <Input
                             type='number'
                             value={item.quantity}
-                            className='min-w-10'
+                            className='min-w-15'
+                            onChange={() => handleQuantityChange(item._id)}
                           />
-                          <Button variant='outline'>+</Button>
+                          <Button
+                            variant='outline'
+                            onClick={() =>
+                              handleIncrement(item._id, item.quantity)
+                            }>
+                            +
+                          </Button>
                         </div>
-                        <p className='grid place-items-center col-span-2 lg:col-span-1'>
+                        <p className='grid place-items-center col-span-1 lg:col-span-1'>
                           ₱{(item.product.price * item.quantity).toFixed(2)}
                         </p>
                       </li>
