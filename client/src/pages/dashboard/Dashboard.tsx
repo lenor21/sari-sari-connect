@@ -20,38 +20,6 @@ export interface Cart {
 }
 
 export default function Layout() {
-  // const [cartData, setCartData] = useState<Cart | undefined>();
-
-  // const { userInfo } = useSelector((state: RootState) => state.auth);
-
-  // const { data: cartDataRaw } = useGetCartQuery(userInfo._id);
-
-  // useEffect(() => {
-  //   if (cartDataRaw) {
-  //     setCartData(cartDataRaw);
-  //   }
-  // }, [cartDataRaw]);
-
-  // const getTotalItems = (cart: Cart): number => {
-  //   let total = 0;
-
-  //   cart.stores.forEach((storeCart) => {
-  //     storeCart.items.forEach((item) => {
-  //       total += item.quantity;
-  //     });
-  //   });
-
-  //   return total;
-  // };
-
-  // const dispatch = useDispatch();
-
-  // if (cartData) {
-  //   const totalCart = getTotalItems(cartData);
-
-  //   dispatch(addTotal(totalCart));
-  // }
-
   return (
     <div>
       <SidebarProvider>

@@ -6,13 +6,18 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Link } from 'react-router';
-import { useGetCartQuery } from '@/features/product/cartApiSlice';
+import {
+  useGetCartQuery,
+  useRemoveItemMutation,
+  useUpdateQuantityMutation,
+} from '@/features/cart/cartApiSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { useState, useEffect } from 'react';
 import { StoreCart } from '@/types/cart/cartTypes';
+import CartItem from '@/components/custom/cart-item';
+import { Store } from 'lucide-react';
 
 export interface Cart {
   _id: string;
@@ -25,11 +30,12 @@ export interface Cart {
 
 const Cart = () => {
   const [cartData, setCartData] = useState<Cart | undefined>();
-  const [count, setCount] = useState(1);
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
   const { data: cartDataRaw } = useGetCartQuery(userInfo._id);
+  const [updateQuantity] = useUpdateQuantityMutation();
+  const [removeItem] = useRemoveItemMutation();
 
   useEffect(() => {
     if (cartDataRaw) {
@@ -55,31 +61,54 @@ const Cart = () => {
     );
   }
 
-  let subTotal: number;
+  const handleQuantityChange = async (
+    productId: string,
+    storeId: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let newQuantity = parseInt(e.target.value, 10);
 
-  subTotal = cartData.stores.reduce((total, storeCart) => {
-    return (
-      total +
-      storeCart.items.reduce((storeTotal, item) => {
-        return storeTotal + item.product.price * item.quantity;
-      }, 0)
-    );
-  }, 0);
-
-  const handleQuantityChange = (itemId: string, itemCount: number) => {
-    console.log(itemId, itemCount);
+    await updateQuantity({
+      item: productId,
+      store: storeId,
+      quantity: newQuantity,
+    }).unwrap();
   };
 
-  const handleIncrement = (itemId: string, itemCount: number) => {
-    console.log(itemId, itemCount);
+  const handleIncrement = async (
+    productId: string,
+    storeId: string,
+    quantity: number
+  ) => {
+    let add: number = quantity + 1;
+
+    await updateQuantity({
+      item: productId,
+      store: storeId,
+      quantity: add,
+    }).unwrap();
   };
 
-  // Handler for the '-' button click
-  const handleDecrement = (itemId: string, itemCount: number) => {
-    console.log(itemId, itemCount);
-  };
+  const handleDecrement = async (
+    productId: string,
+    storeId: string,
+    quantity: number
+  ) => {
+    if (quantity < 2) {
+      await removeItem({
+        item: productId,
+        store: storeId,
+      }).unwrap();
+    } else {
+      let sub: number = quantity - 1;
 
-  console.log(cartData.stores);
+      await updateQuantity({
+        item: productId,
+        store: storeId,
+        quantity: sub,
+      }).unwrap();
+    }
+  };
 
   return (
     <div>
@@ -91,63 +120,29 @@ const Cart = () => {
           {cartData &&
             cartData.stores.map((storeCart) => (
               <div key={storeCart._id}>
-                <h2 className='mb-2 font-bold text-xl lg:text-2xl'>
+                <h2 className='mb-2 font-bold text-xl lg:text-2xl flex items-center gap-x-2'>
+                  <Store />
                   {storeCart.store.name}
                 </h2>
                 <ul key={storeCart._id} className='lg:px-4'>
                   {storeCart.items &&
                     storeCart.items.map((item) => (
-                      <li
+                      <CartItem
                         key={item._id}
-                        className='grid grid-cols-2 lg:grid-cols-8 gap-4 py-5 lg:py-10 lg:px-5 border border-y-1 border-x-0'>
-                        <div className='h-16 w-16'>
-                          <img
-                            src='https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                            alt=''
-                            className='h-full object-cover'
-                          />
-                        </div>
-                        <div className='lg:col-span-4'>
-                          <p className='text-2xl'>{item.product.name}</p>
-                          <p className='text-[#737373]'>
-                            ₱{item.product.price.toFixed(2)}
-                          </p>
-                        </div>
-                        <div className='flex items-center gap-2 col-span-3 lg:col-span-2'>
-                          <Button
-                            variant='outline'
-                            onClick={() =>
-                              handleDecrement(item._id, item.quantity)
-                            }>
-                            -
-                          </Button>
-                          <Input
-                            type='number'
-                            value={item.quantity}
-                            className='min-w-15'
-                            onChange={() =>
-                              handleQuantityChange(item._id, item.quantity)
-                            }
-                          />
-                          <Button
-                            variant='outline'
-                            onClick={() =>
-                              handleIncrement(item._id, item.quantity)
-                            }>
-                            +
-                          </Button>
-                        </div>
-                        <p className='grid place-items-center col-span-1 lg:col-span-1'>
-                          ₱{(item.product.price * item.quantity).toFixed(2)}
-                        </p>
-                      </li>
+                        item={item}
+                        handleIncrement={handleIncrement}
+                        handleDecrement={handleDecrement}
+                        handleQuantityChange={handleQuantityChange}
+                        storeId={storeCart._id}
+                        productId={item._id}
+                      />
                     ))}
                 </ul>
               </div>
             ))}
         </CardContent>
         <CardFooter className='flex flex-col items-start gap-4 mt-10'>
-          <p>Subtotal: ₱{subTotal.toFixed(2)}</p>
+          <p>Subtotal: ₱{20}</p>
           <div className='flex gap-2 lg:gap-4 flex-col lg:flex-row w-full'>
             <Button className='w-full lg:w-52'>Checkout</Button>
             <Button variant='outline' className='w-full lg:w-52'>

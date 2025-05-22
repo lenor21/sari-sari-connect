@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useAddCartMutation } from '@/features/product/cartApiSlice';
+import { useAddCartMutation } from '@/features/cart/cartApiSlice';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 

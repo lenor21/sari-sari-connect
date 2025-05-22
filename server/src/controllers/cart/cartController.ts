@@ -118,4 +118,126 @@ const addCartItem = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export { getCart, addCartItem };
+// @desc: update quantity item
+// @route: PUT /api/cart
+// @access: Private
+const updateQuantity = asyncHandler(async (req: Request, res: Response) => {
+  const { item, store, quantity } = req.body;
+
+  if (!item || !store) {
+    res.status(400);
+    throw new Error('Please fill all fields');
+  }
+
+  if (req.user) {
+    const userId = req.user._id;
+
+    let targetStoreObjectId: mongoose.Types.ObjectId;
+    let targetItemObjectId: mongoose.Types.ObjectId;
+
+    try {
+      targetStoreObjectId = new mongoose.Types.ObjectId(store);
+      targetItemObjectId = new mongoose.Types.ObjectId(item);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid storeId or itemId format.' });
+      return;
+    }
+
+    try {
+      const updatedCart = await Cart.findOneAndUpdate(
+        {
+          user: userId,
+          'stores._id': targetStoreObjectId,
+          'stores.items._id': targetItemObjectId,
+        },
+        {
+          $set: { 'stores.$[store].items.$[item].quantity': quantity },
+        },
+        {
+          new: true,
+          arrayFilters: [
+            { 'store._id': targetStoreObjectId },
+            { 'item._id': targetItemObjectId },
+          ],
+        }
+      );
+
+      res.status(200).json(updatedCart);
+    } catch (err: any) {
+      res.json(err.message);
+    }
+  } else {
+    res.status(401).json({ message: 'Not authorized, no user found.' });
+  }
+});
+
+// @desc: delete cart item
+// @route: DELETE /api/cart
+// @access: Private
+const removeItem = asyncHandler(async (req: Request, res: Response) => {
+  const { item, store } = req.body;
+
+  if (!item || !store) {
+    res.status(400);
+    throw new Error('Please fill all fields');
+  }
+
+  if (req.user) {
+    const userId = req.user._id;
+
+    let targetStoreObjectId: mongoose.Types.ObjectId;
+    let targetItemObjectId: mongoose.Types.ObjectId;
+
+    try {
+      targetStoreObjectId = new mongoose.Types.ObjectId(store);
+      targetItemObjectId = new mongoose.Types.ObjectId(item);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid storeId or itemId format.' });
+      return;
+    }
+
+    try {
+      let updatedCart = await Cart.findOneAndUpdate(
+        {
+          user: userId,
+          'stores._id': targetStoreObjectId,
+          'stores.items._id': targetItemObjectId,
+        },
+        {
+          $pull: { 'stores.$[store].items': { _id: targetItemObjectId } },
+        },
+        {
+          new: true,
+          arrayFilters: [{ 'store._id': targetStoreObjectId }],
+        }
+      );
+
+      if (updatedCart) {
+        const storeThatMightBeEmpty = updatedCart.stores.find((s) =>
+          s._id.equals(targetStoreObjectId)
+        );
+
+        if (storeThatMightBeEmpty && storeThatMightBeEmpty.items.length === 0) {
+          updatedCart = await Cart.findOneAndUpdate(
+            {
+              user: userId,
+              'stores._id': targetStoreObjectId,
+            },
+            {
+              $pull: { stores: { _id: targetStoreObjectId } },
+            },
+            { new: true }
+          );
+        }
+      }
+
+      res.status(200).json(updatedCart);
+    } catch (err: any) {
+      res.json(err.message);
+    }
+  } else {
+    res.status(401).json({ message: 'Not authorized, no user found.' });
+  }
+});
+
+export { getCart, addCartItem, updateQuantity, removeItem };
