@@ -4,6 +4,7 @@ const initialState = {
   userInfo: localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo') || '{}')
     : null,
+  isAuthenticated: !!localStorage.getItem('userInfo'),
 };
 
 const authSlice = createSlice({
