@@ -43,11 +43,13 @@ const NavBar = () => {
               <Tooltip>
                 <TooltipTrigger>
                   <Link to='/dashboard/cart' className='block relative mr-2'>
-                    <Badge
-                      variant='destructive'
-                      className='absolute top-[-12px] left-[8px]'>
-                      {cartTotal}
-                    </Badge>
+                    {cartTotal > 0 && (
+                      <Badge
+                        variant='destructive'
+                        className='absolute top-[-12px] left-[8px]'>
+                        {cartTotal}
+                      </Badge>
+                    )}
 
                     <ShoppingCart />
                   </Link>

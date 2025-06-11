@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { clearCredentials } from '@/features/auth/authSlice';
 import { useLogoutMutation } from '@/features/auth/usersApiSlice';
 import Swal from 'sweetalert2';
+import { clearTotal } from '@/features/cart/cartSlice';
 
 const LogOutButton = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const LogOutButton = () => {
 
           await logout().unwrap();
           dispatch(clearCredentials());
+          dispatch(clearTotal());
 
           navigate('/sign-in');
         }
