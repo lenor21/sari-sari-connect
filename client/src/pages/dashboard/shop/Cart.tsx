@@ -30,6 +30,7 @@ export interface Cart {
 
 const Cart = () => {
   const [cartData, setCartData] = useState<Cart | undefined>();
+  const [subTotal, setSubTotal] = useState<number>(0);
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
@@ -42,6 +43,30 @@ const Cart = () => {
       setCartData(cartDataRaw);
     }
   }, [cartDataRaw]);
+
+  useEffect(() => {
+    let calculatedSubtotal = 0;
+
+    if (cartData && cartData.stores) {
+      for (const storeEntry of cartData.stores) {
+        if (storeEntry.items) {
+          for (const item of storeEntry.items) {
+            if (item.product && typeof item.product.price === 'number') {
+              calculatedSubtotal += item.product.price * item.quantity;
+            } else {
+              console.warn(
+                `Product ID ${
+                  item.product ? item.product._id : 'N/A'
+                } or its price is missing/invalid for an item in the cart.`
+              );
+            }
+          }
+        }
+      }
+    }
+
+    setSubTotal(calculatedSubtotal);
+  }, [cartData]);
 
   if (!cartData || !cartData.stores || cartData.stores.length === 0) {
     return (
@@ -142,7 +167,7 @@ const Cart = () => {
             ))}
         </CardContent>
         <CardFooter className='flex flex-col items-start gap-4 mt-10'>
-          <p>Subtotal: ₱{20}</p>
+          <p>Subtotal: ₱{subTotal.toFixed(2)}</p>
           <div className='flex gap-2 lg:gap-4 flex-col lg:flex-row w-full'>
             <Button className='w-full lg:w-52'>Checkout</Button>
             <Button variant='outline' className='w-full lg:w-52'>
