@@ -7,6 +7,7 @@ interface UserDocument extends Document {
   email: string;
   password?: string;
   role: 'user' | 'admin' | 'store' | string;
+  profileImage: string;
   stores: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
@@ -34,6 +35,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['admin', 'user', 'store'],
       default: 'user',
+    },
+    profileImage: {
+      type: String,
+      required: false,
+      default: null,
     },
     stores: [
       {

@@ -120,6 +120,7 @@ const updateUserProfile = asyncHandler(async (req: Request, res: Response) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+      user.profileImage = req.body.profileImage || user.profileImage;
 
       if (req.body.password) {
         // hash password

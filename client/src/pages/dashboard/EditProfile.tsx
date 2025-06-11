@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import SupabaseProfile from '@/components/custom/supabase-profile';
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -44,10 +44,18 @@ const EditProfile = () => {
         </CardHeader>
         <CardContent>
           <div>
-            <Avatar className='w-40 h-40 mx-auto'>
-              <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <div className='relative w-fit mx-auto'>
+              <Avatar className='w-40 h-40'>
+                <AvatarImage
+                  src='https://github.com/shadcn.png'
+                  alt='@shadcn'
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+
+              <SupabaseProfile />
+            </div>
+
             <div className='lg:w-1/3 mx-auto mt-6'>
               <Form {...form}>
                 <form
