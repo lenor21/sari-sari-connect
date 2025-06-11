@@ -12,12 +12,13 @@ import {
   useRemoveItemMutation,
   useUpdateQuantityMutation,
 } from '@/features/cart/cartApiSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { useState, useEffect } from 'react';
 import { StoreCart } from '@/types/cart/cartTypes';
 import CartItem from '@/components/custom/cart-item';
 import { Store } from 'lucide-react';
+import { addTotal } from '@/features/cart/cartSlice';
 
 export interface Cart {
   _id: string;
@@ -31,6 +32,9 @@ export interface Cart {
 const Cart = () => {
   const [cartData, setCartData] = useState<Cart | undefined>();
   const [subTotal, setSubTotal] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState<number>(0);
+
+  const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
@@ -66,6 +70,23 @@ const Cart = () => {
     }
 
     setSubTotal(calculatedSubtotal);
+  }, [cartData]);
+
+  useEffect(() => {
+    let calculatedTotalItems = 0;
+
+    if (cartData && cartData.stores) {
+      for (const storeEntry of cartData.stores) {
+        if (storeEntry.items) {
+          for (const item of storeEntry.items) {
+            calculatedTotalItems += item.quantity;
+          }
+        }
+      }
+    }
+
+    dispatch(addTotal(calculatedTotalItems));
+    setTotalItems(calculatedTotalItems);
   }, [cartData]);
 
   if (!cartData || !cartData.stores || cartData.stores.length === 0) {
@@ -167,6 +188,7 @@ const Cart = () => {
             ))}
         </CardContent>
         <CardFooter className='flex flex-col items-start gap-4 mt-10'>
+          <p>Total items: {totalItems}</p>
           <p>Subtotal: ₱{subTotal.toFixed(2)}</p>
           <div className='flex gap-2 lg:gap-4 flex-col lg:flex-row w-full'>
             <Button className='w-full lg:w-52'>Checkout</Button>
