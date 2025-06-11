@@ -169,7 +169,9 @@ const Cart = () => {
         <CardFooter className='flex flex-col items-start gap-4 mt-10'>
           <p>Subtotal: ₱{subTotal.toFixed(2)}</p>
           <div className='flex gap-2 lg:gap-4 flex-col lg:flex-row w-full'>
-            <Button className='w-full lg:w-52'>Checkout</Button>
+            <Button className='w-full lg:w-52' disabled>
+              Checkout
+            </Button>
             <Button variant='outline' className='w-full lg:w-52'>
               <Link to='/dashboard/shop'>Continue Shopping</Link>
             </Button>
