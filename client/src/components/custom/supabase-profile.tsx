@@ -4,13 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase, supabaseUrl } from '@/lib/supaBaseProfileClient';
 import Swal from 'sweetalert2';
 import { useUpdateMutation } from '@/features/auth/usersApiSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '@/features/auth/authSlice';
+import { RootState } from '@/app/store';
+import { getFilePathFromSupabaseUrl } from '@/helpers/getFilePathFromSupabaseUrl';
 
 const SupabaseProfile = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  const { userInfo } = useSelector((state: RootState) => state.auth);
 
   const [update] = useUpdateMutation();
 
@@ -41,6 +45,46 @@ const SupabaseProfile = () => {
 
       if (error) {
         throw error;
+      }
+
+      if (userInfo.profileImage) {
+        const fileToDelete = getFilePathFromSupabaseUrl(
+          userInfo.profileImage,
+          bucketName
+        );
+
+        if (fileToDelete) {
+          try {
+            const { error: deleteErrorResponse } = await supabase.storage
+              .from(bucketName)
+              .remove([fileToDelete]);
+
+            if (deleteErrorResponse) {
+              console.error(
+                'Error deleting old image from Supabase:',
+                deleteErrorResponse.message
+              );
+
+              Swal.fire({
+                color: '#0a0a0a',
+                position: 'center',
+                icon: 'warning',
+                title: `Failed to delete old image: ${deleteErrorResponse.message}`,
+                showConfirmButton: false,
+                timer: 4000,
+              });
+            }
+          } catch (err: any) {
+            Swal.fire({
+              color: '#0a0a0a',
+              position: 'center',
+              icon: 'warning',
+              title: `Error during old image cleanup: ${err.message}`,
+              showConfirmButton: false,
+              timer: 4000,
+            });
+          }
+        }
       }
 
       // Construct the public URL

@@ -63,8 +63,8 @@ const NavBar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar className='cursor-pointer'>
-                  <AvatarImage src='https://github.com/shadcn.png' />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage src={`${userInfo.profileImage}`} />
+                  <AvatarFallback>{userInfo.name}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
