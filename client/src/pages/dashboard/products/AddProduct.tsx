@@ -27,6 +27,7 @@ import { useState, useEffect } from 'react';
 import { useAddProductMutation } from '@/features/product/productsApiSlice';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router';
+import { supabase, supabaseUrl } from '@/lib/supaBaseProfileClient';
 
 interface Category {
   _id: string;
@@ -46,11 +47,12 @@ const formSchema = z.object({
   category: z.string({
     required_error: 'You cannot add a product if your category is empty.',
   }),
-  imgURL: z.string(),
 });
 
 const AddProduct = () => {
   const [categoriesData, setCategoriesData] = useState<Category[]>([]);
+  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
@@ -81,19 +83,50 @@ const AddProduct = () => {
       price: 0,
       quantity: 0,
       category: '',
-      imgURL: '',
     },
   });
 
+  const bucketName = 'sari-sari-connect';
+  const folderName = 'products';
+
+  const handleImageUpload = async (img: File) => {
+    const fileName = `${Date.now()}-${img.name.replace(/\s+/g, '_')}`; // Replace spaces for URL safety
+    const filePathBucket = `${folderName}/${fileName}`;
+
+    try {
+      const { data, error } = await supabase.storage
+        .from(bucketName)
+        .upload(filePathBucket, img, {
+          cacheControl: '3600', // Cache for 1 hour
+          upsert: false, // Don't replace if file exists
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      const publicUrl = `${supabaseUrl}/storage/v1/object/public/${bucketName}/${data.path}`;
+      return publicUrl;
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      let finalImageUrl: string | undefined | null = undefined;
+
+      if (image instanceof File) {
+        finalImageUrl = await handleImageUpload(image);
+      }
+
       const product = await addProduct({
         name: values.name,
         description: values.description,
         price: values.price,
         quantity: values.quantity,
         category: values.category,
-        imgURL: values.imgURL,
+        imgURL: finalImageUrl,
       }).unwrap();
 
       Swal.fire({
@@ -117,6 +150,7 @@ const AddProduct = () => {
       });
     }
   }
+
   return (
     <div className='grid place-items-center pt-5 lg:pt-10'>
       <Card className='w-full lg:w-[450px]'>
@@ -225,22 +259,30 @@ const AddProduct = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='imgURL'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image URL</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter your product image URL'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <div>
+                <FormLabel className='mb-2'>Product image</FormLabel>
+                <Input
+                  id='picture'
+                  type='file'
+                  accept='image/*'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setImage(e.target.files[0]);
+
+                      const cachedURL = URL.createObjectURL(e.target.files[0]);
+                      setImageURL(cachedURL);
+                    }
+                  }}
+                  required
+                />
+                {imageURL && (
+                  <img
+                    src={imageURL}
+                    alt='Product image'
+                    className='w-full mx-auto object-contain mt-2'
+                  />
                 )}
-              />
+              </div>
               <Button type='submit'>Add Product</Button>
             </form>
           </Form>

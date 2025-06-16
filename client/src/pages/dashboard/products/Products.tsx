@@ -34,6 +34,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import Swal from 'sweetalert2';
+import { supabase } from '@/lib/supaBaseProfileClient';
+import { getFilePathFromSupabaseUrl } from '@/helpers/getFilePathFromSupabaseUrl';
 
 interface Product {
   _id: string;
@@ -44,6 +46,7 @@ interface Product {
   price: number;
   quantity: number;
   createdAt: Date;
+  imgURL: string;
 }
 
 interface Category {
@@ -91,7 +94,12 @@ const Products = () => {
     }
   }, [categoriesDataRaw]);
 
-  const handleDelete = async (categoryId: string) => {
+  const bucketName = 'sari-sari-connect';
+
+  const handleDelete = async (
+    categoryId: string,
+    productImageURL: string | null | undefined
+  ) => {
     try {
       Swal.fire({
         color: '#0a0a0a',
@@ -105,6 +113,65 @@ const Products = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await deleteProduct(categoryId).unwrap();
+
+          if (productImageURL) {
+            const filePathToDelete = getFilePathFromSupabaseUrl(
+              productImageURL,
+              bucketName
+            ); // Assuming bucketName is defined
+
+            if (filePathToDelete) {
+              try {
+                const { error: deleteStorageError } = await supabase.storage
+                  .from(bucketName)
+                  .remove([filePathToDelete]);
+
+                if (deleteStorageError) {
+                  // Log this as a warning, as the product is deleted, but image cleanup failed
+                  console.warn(
+                    'Warning: Error deleting image from Supabase Storage:',
+                    deleteStorageError.message
+                  );
+                  Swal.fire({
+                    color: '#0a0a0a',
+                    position: 'center',
+                    icon: 'warning',
+                    title: `Product deleted, but image cleanup failed: ${deleteStorageError.message}`,
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                } else {
+                  console.log(
+                    'Image successfully deleted from Supabase Storage.'
+                  );
+                }
+              } catch (storageException: any) {
+                // Catch unexpected network/runtime errors during Supabase delete call
+                console.error(
+                  'Unexpected error during Supabase image deletion:',
+                  storageException.message
+                );
+                Swal.fire({
+                  color: '#0a0a0a',
+                  position: 'center',
+                  icon: 'warning',
+                  title: `Product deleted, but unexpected image cleanup error: ${storageException.message}`,
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              }
+            } else {
+              console.warn(
+                'Could not extract file path from product image URL:',
+                productImageURL
+              );
+              // Product deleted, but image URL was malformed, so couldn't delete from storage.
+            }
+          } else {
+            console.log(
+              'No image URL found for product, skipping Supabase deletion.'
+            );
+          }
 
           Swal.fire({
             color: '#0a0a0a',
@@ -208,7 +275,9 @@ const Products = () => {
                     <Tooltip>
                       <TooltipTrigger
                         className='bg-red-700 py-1 px-2 rounded cursor-pointer'
-                        onClick={() => handleDelete(product._id)}>
+                        onClick={() =>
+                          handleDelete(product._id, product.imgURL)
+                        }>
                         <Trash className='text-white w-4' />
                       </TooltipTrigger>
                       <TooltipContent>

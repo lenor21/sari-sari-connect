@@ -66,11 +66,19 @@ const ShopProductCard: React.FC<ShopProductCardProps> = (props) => {
       <DialogTrigger asChild>
         <div className='rounded-lg shadow-lg border border-[#eee] overflow-hidden group cursor-pointer'>
           <div className='w-full overflow-hidden'>
-            <img
-              src='https://media.istockphoto.com/id/157587362/photo/detailed-close-up-of-sliced-grain-bread-on-white-background.jpg?s=2048x2048&w=is&k=20&c=ut6-wCXQie85gZXY2yXR0aGgNcVqF7u9qUgWOjkgCLs='
-              alt='profile'
-              className='w-full object-cover group-hover:scale-[1.2] transition-all'
-            />
+            {props.imgURL ? (
+              <img
+                src={`${props.imgURL}`}
+                alt='image'
+                className='h-35 w-full object-cover group-hover:scale-[1.2] transition-all'
+              />
+            ) : (
+              <img
+                src='https://media.istockphoto.com/id/157587362/photo/detailed-close-up-of-sliced-grain-bread-on-white-background.jpg?s=2048x2048&w=is&k=20&c=ut6-wCXQie85gZXY2yXR0aGgNcVqF7u9qUgWOjkgCLs='
+                alt='image'
+                className='h-35 w-full object-cover group-hover:scale-[1.2] transition-all'
+              />
+            )}
           </div>
           <div className='p-3 group-hover:opacity-50 transition-all'>
             <p className='text-sm lg:text-xl font-medium line-clamp-1'>
