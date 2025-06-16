@@ -4,8 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
 
 const Profile = () => {
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
   const navigate = useNavigate();
 
   return (
@@ -19,11 +23,15 @@ const Profile = () => {
         <CardContent>
           <div>
             <Avatar className='w-40 h-40 mx-auto'>
-              <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage
+                src={`${userInfo.profileImage}`}
+                alt='@shadcn'
+                className='object-cover'
+              />
+              <AvatarFallback>{userInfo.name}</AvatarFallback>
             </Avatar>
             <p className='text-center text-3xl font-medium mt-3'>
-              Ronel De Jesus
+              {userInfo.name}
             </p>
             <div className='grid place-items-center mt-3'>
               <Button

@@ -15,23 +15,74 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import SupabaseProfile from '@/components/custom/supabase-profile';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
+import Swal from 'sweetalert2';
+import { useUpdateMutation } from '@/features/auth/usersApiSlice';
+import { setCredentials } from '@/features/auth/authSlice';
+import { useNavigate } from 'react-router';
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
-  }),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, {
+      message: 'Name must be at least 2 characters.',
+    }),
+    email: z.string().email().min(5),
+    password: z.string().optional(),
+    confirm: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords don't match",
+    path: ['confirm'],
+  });
 
 const EditProfile = () => {
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  const [update] = useUpdateMutation();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      name: userInfo.name,
+      email: userInfo.email,
+      password: '',
+      confirm: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await update({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+
+      dispatch(setCredentials({ ...res }));
+      navigate('/dashboard');
+
+      Swal.fire({
+        color: '#0a0a0a',
+        position: 'center',
+        icon: 'success',
+        title: `Profile updated successfully`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (err: any) {
+      Swal.fire({
+        color: '#0a0a0a',
+        position: 'center',
+        icon: 'error',
+        title: `${err.data.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   }
 
   return (
@@ -47,10 +98,11 @@ const EditProfile = () => {
             <div className='relative w-fit mx-auto'>
               <Avatar className='w-40 h-40'>
                 <AvatarImage
-                  src='https://github.com/shadcn.png'
+                  src={`${userInfo.profileImage}`}
                   alt='@shadcn'
+                  className='object-cover'
                 />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>{userInfo.name}</AvatarFallback>
               </Avatar>
 
               <SupabaseProfile />
@@ -63,10 +115,10 @@ const EditProfile = () => {
                   className='space-y-8'>
                   <FormField
                     control={form.control}
-                    name='username'
+                    name='name'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>Name</FormLabel>
                         <FormControl>
                           <Input placeholder='Jose Rizal' {...field} />
                         </FormControl>
@@ -74,7 +126,57 @@ const EditProfile = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type='submit'>Update</Button>
+                  <FormField
+                    control={form.control}
+                    name='email'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder='joserizal@gmail.com' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='password'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>New password</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Enter new password' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='confirm'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm new password</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Confrim new password'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className='flex gap-3'>
+                    <Button type='submit'>Update</Button>
+                    <Button
+                      type='button'
+                      onClick={() => navigate('/dashboard')}
+                      variant='destructive'>
+                      Cancel
+                    </Button>
+                  </div>
                 </form>
               </Form>
             </div>

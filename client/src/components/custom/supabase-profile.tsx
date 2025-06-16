@@ -3,14 +3,21 @@ import { Button } from '@/components/ui/button';
 import { useEffect, useRef, useState } from 'react';
 import { supabase, supabaseUrl } from '@/lib/supaBaseProfileClient';
 import Swal from 'sweetalert2';
+import { useUpdateMutation } from '@/features/auth/usersApiSlice';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '@/features/auth/authSlice';
 
 const SupabaseProfile = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<File | null>(null);
-  const [uploadProfileUrl, setUploadProfileUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
+  const [update] = useUpdateMutation();
+
+  const dispatch = useDispatch();
+
   const bucketName = 'sari-sari-connect';
+  const folderName = 'profiles';
 
   useEffect(() => {
     if (profile) {
@@ -19,15 +26,15 @@ const SupabaseProfile = () => {
   }, [profile]);
 
   const handleProfileUpload = async (img: File) => {
-    setUploadProfileUrl(null);
     setIsUploading(true);
 
     const fileName = `${Date.now()}-${img.name.replace(/\s+/g, '_')}`; // Replace spaces for URL safety
+    const filePathBucket = `${folderName}/${fileName}`;
 
     try {
       const { data, error } = await supabase.storage
         .from(bucketName)
-        .upload(fileName, img, {
+        .upload(filePathBucket, img, {
           cacheControl: '3600', // Cache for 1 hour
           upsert: false, // Don't replace if file exists
         });
@@ -38,22 +45,28 @@ const SupabaseProfile = () => {
 
       // Construct the public URL
       const publicUrl = `${supabaseUrl}/storage/v1/object/public/${bucketName}/${data.path}`;
-      setUploadProfileUrl(publicUrl);
+
+      const res = await update({
+        profileImage: publicUrl,
+      }).unwrap();
+
+      dispatch(setCredentials({ ...res }));
       // console.log('File uploaded successfully!', publicUrl);
+
       Swal.fire({
         color: '#0a0a0a',
         position: 'center',
         icon: 'success',
-        title: `Profile uploaded successfully!`,
+        title: `Profile image updated!`,
         showConfirmButton: false,
         timer: 2500,
       });
-    } catch (error: any) {
+    } catch (err: any) {
       Swal.fire({
         color: '#0a0a0a',
         position: 'center',
         icon: 'error',
-        title: `${error.message}`,
+        title: `${err.message}`,
         showConfirmButton: false,
         timer: 3000,
       });
